@@ -1,6 +1,6 @@
 ansible_python_interpreter: /usr/bin/python3
 
-ansible_user: "{{ vault_ansible_user }}"
+ansible_username: "{{ vault_ansible_username }}"
 ansible_ssh_key: "{{ vault_ansible_ssh_key }}"
 
 timezone: "{{ vault_timezone }}"
