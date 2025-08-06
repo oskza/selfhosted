@@ -1,0 +1,32 @@
+- hosts: all
+  become: "{{ main_user is defined }}"
+  remote_user: "{{ (main_user is defined) | ternary(main_user, 'root') }}"
+  tasks:
+    - name: upgrade dist
+      ansible.builtin.apt:
+        upgrade: dist
+        update_cache: true
+
+    - name: install sudo package
+      ansible.builtin.apt:
+        name: sudo
+        state: latest
+
+    - name: create ansible user
+      ansible.builtin.user:
+        name: "{{ ansible_username }}"
+        shell: '/bin/bash'
+
+    - name: add ssh key for ansible user
+      ansible.posix.authorized_key:
+        user: "{{ ansible_username }}"
+        key: "{{ ansible_ssh_key }}"
+
+    - name: add ansible user to sudoers
+      ansible.builtin.copy:
+        content: "{{ ansible_username }} ALL=(ALL) NOPASSWD: ALL"
+        dest: "/etc/sudoers.d/{{ ansible_username }}"
+        owner: root
+        group: root
+        mode: 0440
+        force: false

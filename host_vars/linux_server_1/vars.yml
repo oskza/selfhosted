@@ -1,1 +1,3 @@
 ansible_host: "{{ vault_ansible_host }}"
+
+main_user: "{{ vault_main_user }}"
