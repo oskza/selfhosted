@@ -1,0 +1,10 @@
+- hosts: all
+  become: true
+  remote_user: "{{ ansible_username }}"
+  pre_tasks:
+    - name: update cache
+      apt:
+        update_cache: true
+      changed_when: false
+  roles:
+    - common
