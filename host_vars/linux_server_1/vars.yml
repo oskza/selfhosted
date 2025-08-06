@@ -1,3 +1,6 @@
 ansible_host: "{{ vault_ansible_host }}"
 
 main_user: "{{ vault_main_user }}"
+
+ssh_users: "{{ main_user }} {{ ansible_username }}"
+ssh_template_file: sshd_config_ubuntu.j2
