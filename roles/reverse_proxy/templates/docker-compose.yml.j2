@@ -1,0 +1,75 @@
+services:
+  traefik:
+    build:
+      context: .
+    image: my-traefik
+    container_name: traefik
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - proxy_net
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - data:{{ traefik.dirs.config }}
+      - acme:{{ traefik.dirs.acme }}
+    environment:
+      TRAEFIK_DASHBOARD_CREDENTIALS: {{ traefik.dashboard_credentials }}
+      CF_API_EMAIL: {{ traefik.cloudflare_credentials.api_email }}
+      CF_DNS_API_TOKEN: {{ traefik.cloudflare_credentials.dns_api_token }}
+    command:
+      - --api.dashboard=true
+      - --entrypoints.http.address=:80
+      - --entrypoints.http.http.redirections.entrypoint.to=https
+      - --entrypoints.http.http.redirections.entrypoint.scheme=https
+      - --entrypoints.https.address=:443
+      - --serversTransport.insecureSkipVerify=true
+      - --providers.docker.endpoint=unix:///var/run/docker.sock
+      - --providers.docker.exposedByDefault=false
+      - --providers.docker.network=proxy_net
+      - --providers.docker.watch=true
+      - --providers.file.filename={{ traefik.dirs.config }}/config.yml
+      - --providers.file.watch=true
+      - --certificatesresolvers.cloudflare.acme.email={{ traefik.cloudflare_credentials.api_email }}
+      - --certificatesresolvers.cloudflare.acme.storage={{ traefik.dirs.acme }}/acme.json
+      - --certificatesresolvers.cloudflare.acme.dnschallenge.provider=cloudflare
+      - --certificatesresolvers.cloudflare.acme.dnschallenge.resolvers={{ dns_resolver_1 }}:53,{{ dns_resolver_2 }}:53
+{% if traefik.debug is defined and traefik.debug == true %}
+      - --log.level=DEBUG
+      - --api.debug=true
+      - --certificatesresolvers.cloudflare.acme.caServer=https://acme-staging-v02.api.letsencrypt.org/directory
+{% else %}
+      - --log.level=INFO
+{% endif %}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.traefik.entrypoints=http"
+      - "traefik.http.routers.traefik.rule=Host(`{{ traefik.host }}`)"
+      - "traefik.http.middlewares.traefik-auth.basicauth.users={{ traefik.dashboard_credentials }}"
+      - "traefik.http.services.traefik.loadbalancer.server.port=80"
+      - "traefik.http.middlewares.traefik-https-redirect.redirectscheme.scheme=https"
+      - "traefik.http.middlewares.sslheader.headers.customrequestheaders.X-Forwarded-Proto=https"
+      - "traefik.http.routers.traefik.middlewares=traefik-https-redirect"
+      - "traefik.http.routers.traefik-secure.entrypoints=https"
+      - "traefik.http.routers.traefik-secure.rule=Host(`{{ traefik.host }}`)"
+      - "traefik.http.routers.traefik-secure.middlewares=traefik-auth"
+      - "traefik.http.routers.traefik-secure.tls=true"
+      - "traefik.http.routers.traefik-secure.tls.certresolver=cloudflare"
+      - "traefik.http.routers.traefik-secure.tls.domains[0].main={{ traefik.domain_name }}"
+      - "traefik.http.routers.traefik-secure.tls.domains[0].sans=*.{{ traefik.domain_name }}"
+      - "traefik.http.routers.traefik-secure.service=api@internal"
+networks:
+  proxy_net:
+    name: proxy_net
+    external: true
+volumes:
+  data:
+    name: traefik_data
+  acme:
+    name: traefik_acme

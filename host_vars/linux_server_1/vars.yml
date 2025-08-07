@@ -5,6 +5,9 @@ main_user: "{{ vault_main_user }}"
 ssh_users: "{{ main_user }} {{ ansible_username }}"
 ssh_template_file: sshd_config_ubuntu.j2
 
+dns_resolver_1: "{{ vault_dns_resolver_1 }}"
+dns_resolver_2: "{{ vault_dns_resolver_2 }}"
+
 drives:
   system:
     device: "{{ vault_system_drive_device }}"

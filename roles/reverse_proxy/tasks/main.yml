@@ -1,0 +1,26 @@
+- name: setup traefik service directory
+  ansible.builtin.file:
+    path: "{{ directories.services }}/traefik"
+    state: directory
+    owner: "{{ main_user }}"
+    group: "{{ main_user }}"
+    mode: 0755
+
+- name: deploy traefik from template files
+  ansible.builtin.template:
+    src: "templates/{{ filename }}.j2"
+    dest: "{{ directories.services }}/traefik/{{ filename }}"
+    owner: "{{ main_user }}"
+    group: "{{ main_user }}"
+    mode: 0644
+  loop:
+    - Dockerfile
+    - docker-compose.yml
+    - config.yml
+  loop_control:
+    loop_var: filename
+
+- name: run traefik using docker compose
+  community.docker.docker_compose_v2:
+    project_src: "{{ directories.services }}/traefik"
+    build: always

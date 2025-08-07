@@ -1,0 +1,3 @@
+FROM traefik:{{ traefik.version }}
+CMD touch {{ traefik.dirs.acme }}/acme.json && chmod 600 {{ traefik.dirs.acme }}/acme.json
+COPY config.yml {{ traefik.dirs.config }}/config.yml

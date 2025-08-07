@@ -1,0 +1,15 @@
+traefik:
+  version: v3.5
+  host: "{{ vault_traefik_host }}"
+  # debug: false
+  domain_name: "{{ vault_domain_name }}"
+  allow_list:
+    - "{{ vault_proxy_subnet }}"
+    - "{{ vault_local_subnet }}"
+  cloudflare_credentials:
+    api_email: "{{ vault_cf_api_email }}"
+    dns_api_token: "{{ vault_cf_dns_api_token }}"
+  dashboard_credentials: "{{ vault_dashboard_hashed }}"
+  dirs:
+    acme: /acme
+    config: /config
