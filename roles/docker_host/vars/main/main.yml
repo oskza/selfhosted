@@ -1,0 +1,6 @@
+docker_download_url: https://download.docker.com/linux/ubuntu
+docker_apt_repository: "deb [arch=amd64] {{ docker_download_url }} {{ ansible_distribution_release }} stable"
+docker_external_networks:
+  - name: proxy_net
+    ipam_config:
+      - subnet: "{{ vault_proxy_subnet }}"

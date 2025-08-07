@@ -14,3 +14,4 @@
   remote_user: "{{ ansible_username }}"
   roles:
     - linux_server
+    - docker_host

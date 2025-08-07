@@ -1,0 +1,58 @@
+- name: install required system packages
+  ansible.builtin.package:
+    name: "{{ sys_pkg }}"
+    state: latest
+  loop:
+    - apt-transport-https
+    - ca-certificates
+    - curl
+    - software-properties-common
+    - python3-docker
+    - python3-jsondiff
+  loop_control:
+    loop_var: sys_pkg
+
+- name: add docker GPG apt key
+  ansible.builtin.apt_key:
+    url: "{{ docker_download_url }}/gpg"
+    state: present
+
+- name: add docker repository
+  ansible.builtin.apt_repository:
+    repo: "{{ docker_apt_repository }}"
+    state: present
+
+- name: install docker and related packages
+  ansible.builtin.package:
+    name: "{{ docker_pkg }}"
+    state: latest
+  loop:
+    - docker-ce
+    - docker-ce-cli
+    - containerd.io
+    - docker-buildx-plugin
+    - docker-compose-plugin
+  loop_control:
+    loop_var: docker_pkg
+
+- name: start and enable docker services
+  ansible.builtin.service:
+    name: "{{ service }}"
+    state: started
+    enabled: yes
+  loop:
+    - docker.service
+    - containerd.service
+  loop_control:
+    loop_var: service
+
+- name: create docker group
+  ansible.builtin.group:
+    name: docker
+    state: present
+
+- name: add main user to docker group
+  ansible.builtin.user:
+    name: "{{ main_user }}"
+    groups: docker
+    append: true

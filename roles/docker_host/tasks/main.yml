@@ -1,0 +1,19 @@
+- name: install docker
+  ansible.builtin.include_tasks: install_docker.yml
+
+- name: create docker networks
+  community.general.docker_network:
+    name: "{{ net.name }}"
+    driver: "{{ net.driver | default(omit) }}"
+    ipam_config: "{{ net.ipam_config | default(omit) }}"
+  loop: "{{ docker_external_networks }}"
+  loop_control:
+    loop_var: net
+
+- name: create docker volumes backup directory
+  ansible.builtin.file:
+    path: "{{ directories.backup }}/volumes"
+    state: directory
+    owner: "{{ main_user }}"
+    group: "{{ main_user }}"
+    mode: 0755
