@@ -17,3 +17,7 @@
     owner: "{{ main_user }}"
     group: "{{ main_user }}"
     mode: 0755
+
+- name: pull ubuntu image
+  community.docker.docker_image_pull:
+    name: ubuntu
