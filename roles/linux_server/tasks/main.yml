@@ -1,0 +1,76 @@
+- name: resize system LVM when fs is lvm and volume info is provided
+  community.general.lvol:
+    vg: "{{ drives.system.logical_volume.group }}"
+    lv: "{{ drives.system.logical_volume.name }}"
+    size: "{{ (drives.system.logical_volume.size is not defined or drives.system.logical_volume.size == 'all') | ternary('100%PVS', system_drive.logical_volume.size) }}"
+    resizefs: true
+  when: drives.system.filesystem == 'lvm' and drives.system.logical_volume is defined
+
+- name: mount additional drives
+  ansible.posix.mount:
+    path: "{{ drive.mount_point }}"
+    src: LABEL="{{ drive.label }}"
+    fstype: "{{ drive.filesystem }}"
+    opts: "{{ drive.opts | default('defaults') }}"
+    state: "{{ drive.state | default('mounted') }}"
+  loop: "{{ drives.additional }}"
+  loop_control:
+    loop_var: drive
+  when: drives.additional is defined
+
+- name: create defined directories except home and media
+  ansible.builtin.file:
+    path: "{{ dir }}"
+    state: directory
+    owner: "{{ main_user }}"
+    group: "{{ main_user }}"
+    mode: 0755
+  loop: "{{ directories | dict2items | rejectattr('key', 'in', ['home', 'media']) | map(attribute='value') | list }}"
+  loop_control:
+    loop_var: dir
+
+- name: set env variables for defined directories
+  ansible.builtin.lineinfile:
+    path: /etc/environment
+    line: "{{ dir.key | upper }}_DIR={{ dir.value }}"
+    state: present
+  loop: "{{ directories | dict2items }}"
+  loop_control:
+    loop_var: dir
+
+- name: copy bashrc and bash_aliases files
+  ansible.builtin.copy:
+    src: "{{ filename }}"
+    dest: "{{ directories.home }}/.{{ filename }}"
+    owner: "{{ main_user }}"
+    group: "{{ main_user }}"
+    mode: 0644
+  loop:
+    - bashrc
+    - bash_aliases
+  loop_control:
+    loop_var: filename
+
+- name: install needed packages
+  ansible.builtin.package:
+    name: "{{ pkg }}"
+    state: latest
+  loop:
+    - apt-transport-https
+    - ca-certificates
+    - software-properties-common
+    - build-essential
+    - net-tools
+    - curl
+    - nano
+  loop_control:
+    loop_var: pkg
+
+- name: allow openssh in ufw
+  community.general.ufw:
+    rule: allow
+    name: OpenSSH
+
+- name: enable ufw
+  community.general.ufw:
+    state: enabled

@@ -4,3 +4,31 @@ main_user: "{{ vault_main_user }}"
 
 ssh_users: "{{ main_user }} {{ ansible_username }}"
 ssh_template_file: sshd_config_ubuntu.j2
+
+drives:
+  system:
+    device: "{{ vault_system_drive_device }}"
+    filesystem: lvm
+    logical_volume:
+      name: "{{ vault_system_drive_lv_name }}"
+      group: "{{ vault_system_drive_vg_name }}"
+      size: all
+  additional:
+    - id: storage
+      label: "{{ vault_storage_drive_label }}"
+      device: "{{ vault_storage_drive_device }}"
+      mount_point: "{{ vault_storage_drive_mount_point }}"
+      filesystem: ext4
+    - id: media
+      label: "{{ vault_media_drive_label }}"
+      device: "{{ vault_media_drive_device }}"
+      mount_point: "{{ vault_media_drive_mount_point }}"
+      filesystem: ntfs-3g
+
+directories:
+  home: "/home/{{ main_user }}"
+  services: "/home/{{ main_user }}/services"
+  media: "{{ drives.additional | selectattr('id', 'equalto', 'media') | map(attribute='mount_point') | first }}/data/media_data"
+  storage: "{{ drives.additional | selectattr('id', 'equalto', 'storage') | map(attribute='mount_point') | first }}/server_data"
+  backup: "{{ drives.additional | selectattr('id', 'equalto', 'storage') | map(attribute='mount_point') | first }}/server_data/backup"
+  workspace: "{{ drives.additional | selectattr('id', 'equalto', 'storage') | map(attribute='mount_point') | first }}/server_data/workspace"

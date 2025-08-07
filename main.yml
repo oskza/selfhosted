@@ -8,3 +8,9 @@
       changed_when: false
   roles:
     - common
+
+- hosts: linux_servers
+  become: true
+  remote_user: "{{ ansible_username }}"
+  roles:
+    - linux_server
