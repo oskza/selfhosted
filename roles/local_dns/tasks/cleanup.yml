@@ -1,8 +1,9 @@
-- name: stop and remove pihole container and image
+- name: stop and remove pihole container, volume and image
   community.docker.docker_compose_v2:
     project_src: "{{ directories.services }}/pihole"
     state: absent
     remove_images: all
+    volumes: true
   ignore_errors: true
 
 - name: delete pihole directory
