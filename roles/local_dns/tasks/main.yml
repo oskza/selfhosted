@@ -1,0 +1,58 @@
+- name: setup pihole directory
+  ansible.builtin.file:
+    path: "{{ directories.services }}/pihole"
+    state: directory
+    owner: "{{ main_user.name }}"
+    group: "{{ main_user.name }}"
+    mode: 0755
+
+- name: deploy pihole from template file
+  ansible.builtin.template:
+    src: templates/docker-compose.yml.j2
+    dest: "{{ directories.services }}/pihole/docker-compose.yml"
+    owner: "{{ main_user.name }}"
+    group: "{{ main_user.name }}"
+    mode: 0644
+
+- name: disable DNSStubListener and update resolver
+  ansible.builtin.include_tasks: update_resolver.yml
+
+- name: run pihole using docker compose
+  community.docker.docker_compose_v2:
+    project_src: "{{ directories.services }}/pihole"
+
+- name: update netplan and dns records
+  ansible.builtin.include_tasks: "{{ file }}"
+  loop:
+    - update_netplan.yml
+    - update_dns_records.yml
+  loop_control:
+    loop_var: file
+
+- name: create docker daemon file
+  copy:
+    dest: /etc/docker/daemon.json
+    content: |
+      {
+        "dns": ["{{ ansible_host }}", "{{ dns_resolver_1 }}", "{{ dns_resolver_2 }}"]
+      }
+    owner: root
+    group: root
+    mode: 0644
+  register: docker_config
+
+- name: restart docker
+  service:
+    name: docker
+    state: restarted
+  when: docker_config.changed
+
+- name: display message for router DNS change
+  ansible.builtin.debug:
+    msg:
+      - "✅ Pi-hole has been successfully installed!"
+      - "➡️  Please go to your router settings and update the DNS server to the fixed IP:"
+      - "   - IPv4: {{ ansible_default_ipv4.address | default('Not found') }}"
+      - "   - IPv6: {{ ansible_default_ipv6.address | default('Not found') }}"
+      - "🔄 Don't forget to restart your router after making the change!"
+  when: docker_config.changed

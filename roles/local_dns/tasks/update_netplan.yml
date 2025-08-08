@@ -1,0 +1,23 @@
+- name: get network interface name
+  ansible.builtin.shell: "ip -o link show | awk -F': ' '{print $2}' | grep -E '^e' | head -n 1"
+  register: network_interface
+  changed_when: false
+
+- name: update netplan configuration
+  ansible.builtin.copy:
+    dest: /etc/netplan/{{ netplan_filename }}
+    content: |
+      network:
+          ethernets:
+              {{ network_interface.stdout }}:
+                  dhcp4: true
+                  dhcp4-overrides:
+                      use-dns: false
+                  nameservers:
+                      addresses: [127.0.0.1]
+          version: 2
+  register: netplan_update
+
+- name: apply netplan changes
+  ansible.builtin.command: netplan apply
+  when: netplan_update.changed

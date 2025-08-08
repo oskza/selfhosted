@@ -1,0 +1,22 @@
+- name: disable DNSStubListener
+  ansible.builtin.replace:
+    path: /etc/systemd/resolved.conf
+    regexp: '^#?DNSStubListener=yes'
+    replace: 'DNSStubListener=no'
+  register: dns_change
+  changed_when: dns_change.changed
+
+- name: update resolv.conf
+  block:
+    - name: update resolv.conf symlink
+      ansible.builtin.file:
+        src: /run/systemd/resolve/resolv.conf
+        dest: /etc/resolv.conf
+        state: link
+        force: true
+
+    - name: restart systemd-resolved
+      ansible.builtin.systemd:
+        name: systemd-resolved
+        state: restarted
+  when: dns_change.changed

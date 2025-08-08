@@ -1,0 +1,33 @@
+services:
+  pihole:
+    image: pihole/pihole:{{ pihole.version }}
+    container_name: pihole
+    restart: unless-stopped
+    networks:
+      proxy_net:
+        ipv4_address: {{ local_dns_internal_ip }}
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+    volumes:
+      - data:/etc/pihole
+    environment:
+      TZ: {{ timezone }}
+      PIHOLE_UID: "{{ main_user.uid }}"
+      PIHOLE_GID: "{{ main_user.gid }}"
+      FTLCONF_webserver_api_password: {{ pihole.password }}
+      FTLCONF_dns_upstreams: "{{ dns_resolver_1 }};{{ dns_resolver_2 }}"
+      FTLCONF_dns_listeningMode: all
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.pihole.rule=Host(`{{ pihole.host }}`)"
+      - "traefik.http.routers.pihole.entrypoints=https"
+      - "traefik.http.routers.pihole.tls=true"
+      - "traefik.http.services.pihole.loadbalancer.server.port=80"
+networks:
+  proxy_net:
+    name: proxy_net
+    external: true
+volumes:
+  data:
+    name: pihole_data

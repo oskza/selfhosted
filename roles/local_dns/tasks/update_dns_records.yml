@@ -1,0 +1,9 @@
+- name: update dns hosts using pihole-FTL
+  community.docker.docker_container_exec:
+    container: pihole
+    command: pihole-FTL --config dns.hosts '{{ pihole.dns_records | to_json }}'
+
+- name: update dns cname records using pihole-FTL
+  community.docker.docker_container_exec:
+    container: pihole
+    command: pihole-FTL --config dns.cnameRecords '{{ pihole.cname_records | to_json }}'

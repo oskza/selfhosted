@@ -1,0 +1,57 @@
+- name: stop and remove pihole container and image
+  community.docker.docker_compose_v2:
+    project_src: "{{ directories.services }}/pihole"
+    state: absent
+    remove_images: all
+
+- name: delete pihole directory
+  ansible.builtin.file:
+    path: "{{ directories.services }}/pihole"
+    state: absent
+  ignore_errors: true
+
+- name: delete docker daemon file
+  ansible.builtin.file:
+    path: /etc/docker/daemon.json
+    state: absent
+
+- name: revert DNSStubListener
+  ansible.builtin.replace:
+    path: /etc/systemd/resolved.conf
+    regexp: '^#?DNSStubListener=no'
+    replace: 'DNSStubListener=yes'
+  register: dns_revert
+
+- name: revert resolv.conf symlink to default
+  ansible.builtin.file:
+    src: /usr/lib/systemd/resolv.conf
+    dest: /etc/resolv.conf
+    state: link
+    force: true
+  when: dns_revert.changed
+
+- name: restart systemd-resolved to apply revert
+  ansible.builtin.systemd:
+    name: systemd-resolved
+    state: restarted
+  when: dns_revert.changed
+
+- name: get network interface name
+  ansible.builtin.shell: "ip -o link show | awk -F': ' '{print $2}' | grep -E '^e' | head -n 1"
+  register: network_interface
+  changed_when: false
+
+- name: revert netplan configuration to default
+  ansible.builtin.copy:
+    dest: /etc/netplan/{{ netplan_filename }}
+    content: |
+      network:
+          ethernets:
+              {{ network_interface.stdout }}:
+                  dhcp4: true  
+          version: 2
+  register: netplan_revert
+
+- name: apply reverted netplan
+  ansible.builtin.command: netplan apply
+  when: netplan_revert.changed
