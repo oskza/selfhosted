@@ -15,5 +15,5 @@
   roles:
     - linux_server
     - docker_host
-    - reverse_proxy
     - local_dns
+    - reverse_proxy
