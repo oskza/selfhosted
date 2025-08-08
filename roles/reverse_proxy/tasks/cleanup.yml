@@ -1,0 +1,18 @@
+- name: stop and remove traefik container, volumes and image
+  community.docker.docker_compose_v2:
+    project_src: "{{ directories.services }}/traefik"
+    state: absent
+    remove_images: all
+    volumes: true
+  ignore_errors: true
+
+- name: delete traefik directory
+  ansible.builtin.file:
+    path: "{{ directories.services }}/traefik"
+    state: absent
+  ignore_errors: true
+
+- name: delete docker daemon file
+  ansible.builtin.file:
+    path: /etc/docker/daemon.json
+    state: absent
