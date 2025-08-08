@@ -2,16 +2,16 @@
   ansible.builtin.file:
     path: "{{ directories.services }}/traefik"
     state: directory
-    owner: "{{ main_user }}"
-    group: "{{ main_user }}"
+    owner: "{{ main_user.name }}"
+    group: "{{ main_user.name }}"
     mode: 0755
 
 - name: deploy traefik from template files
   ansible.builtin.template:
     src: "templates/{{ filename }}.j2"
     dest: "{{ directories.services }}/traefik/{{ filename }}"
-    owner: "{{ main_user }}"
-    group: "{{ main_user }}"
+    owner: "{{ main_user.name }}"
+    group: "{{ main_user.name }}"
     mode: 0644
   loop:
     - Dockerfile

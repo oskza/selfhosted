@@ -14,8 +14,8 @@
   ansible.builtin.file:
     path: "{{ directories.backup }}/volumes"
     state: directory
-    owner: "{{ main_user }}"
-    group: "{{ main_user }}"
+    owner: "{{ main_user.name }}"
+    group: "{{ main_user.name }}"
     mode: 0755
 
 - name: pull ubuntu image

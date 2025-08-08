@@ -1,8 +1,11 @@
 ansible_host: "{{ vault_ansible_host }}"
 
-main_user: "{{ vault_main_user }}"
+main_user: 
+  name: "{{ vault_main_user_name }}"
+  uid: "{{ vault_main_user_uid }}"
+  gid: "{{ vault_main_user_gid }}"
 
-ssh_users: "{{ main_user }} {{ ansible_username }}"
+ssh_users: "{{ main_user.name }} {{ ansible_username }}"
 ssh_template_file: sshd_config_ubuntu.j2
 
 dns_resolver_1: "{{ vault_dns_resolver_1 }}"
@@ -29,8 +32,8 @@ drives:
       filesystem: ntfs-3g
 
 directories:
-  home: "/home/{{ main_user }}"
-  services: "/home/{{ main_user }}/services"
+  home: "/home/{{ main_user.name }}"
+  services: "/home/{{ main_user.name }}/services"
   media: "{{ drives.additional | selectattr('id', 'equalto', 'media') | map(attribute='mount_point') | first }}/data/media_data"
   storage: "{{ drives.additional | selectattr('id', 'equalto', 'storage') | map(attribute='mount_point') | first }}/server_data"
   backup: "{{ drives.additional | selectattr('id', 'equalto', 'storage') | map(attribute='mount_point') | first }}/server_data/backup"

@@ -22,8 +22,8 @@
   ansible.builtin.file:
     path: "{{ dir }}"
     state: directory
-    owner: "{{ main_user }}"
-    group: "{{ main_user }}"
+    owner: "{{ main_user.name }}"
+    group: "{{ main_user.name }}"
     mode: 0755
   loop: "{{ directories | dict2items | rejectattr('key', 'in', ['home', 'media']) | map(attribute='value') | list }}"
   loop_control:
@@ -42,8 +42,8 @@
   ansible.builtin.copy:
     src: "{{ filename }}"
     dest: "{{ directories.home }}/.{{ filename }}"
-    owner: "{{ main_user }}"
-    group: "{{ main_user }}"
+    owner: "{{ main_user.name }}"
+    group: "{{ main_user.name }}"
     mode: 0644
   loop:
     - bashrc
