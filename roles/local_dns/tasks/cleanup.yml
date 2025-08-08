@@ -3,6 +3,7 @@
     project_src: "{{ directories.services }}/pihole"
     state: absent
     remove_images: all
+  ignore_errors: true
 
 - name: delete pihole directory
   ansible.builtin.file:
