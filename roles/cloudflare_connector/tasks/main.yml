@@ -1,0 +1,19 @@
+- name: setup cloudflared directory
+  ansible.builtin.file:
+    path: "{{ directories.services }}/cloudflared"
+    state: directory
+    owner: "{{ main_user.name }}"
+    group: "{{ main_user.name }}"
+    mode: 0755
+
+- name: deploy cloudflared from template file
+  ansible.builtin.template:
+    src: templates/docker-compose.yml.j2
+    dest: "{{ directories.services }}/cloudflared/docker-compose.yml"
+    owner: "{{ main_user.name }}"
+    group: "{{ main_user.name }}"
+    mode: 0644
+
+- name: run cloudflared using docker compose
+  community.docker.docker_compose_v2:
+    project_src: "{{ directories.services }}/cloudflared"

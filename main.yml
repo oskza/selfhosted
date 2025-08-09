@@ -18,3 +18,4 @@
     - local_dns
     - reverse_proxy
     - portainer_manager
+    - cloudflare_connector

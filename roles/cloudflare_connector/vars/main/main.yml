@@ -1,0 +1,6 @@
+cloudflared:
+  version: 2025.8.0
+  account_id: "{{ vault_account_id }}"
+  tunnel:
+    id: "{{ vault_tunnel_id }}"
+    token: "{{ vault_tunnel_token }}"
