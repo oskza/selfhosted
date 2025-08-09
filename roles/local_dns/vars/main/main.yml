@@ -1,8 +1,8 @@
-proxy_local_hostname: "{{ vault_proxy_local_hostname }}"
-
 netplan_filename: 50-cloud-init.yaml
 
 local_dns_internal_ip: "{{ vault_local_dns_internal_ip }}"
+
+proxy_local_hostname: "{{ vault_proxy_local_hostname }}"
 
 pihole:
   version: 2025.03.0
@@ -13,4 +13,3 @@ pihole:
     - "{{ vault_router_ip }} {{ vault_router_local_hostname }}"
   cname_records:
     - "{{ vault_pihole_host }},{{ proxy_local_hostname }}"
-    - "{{ vault_proxy_hostname }},{{ proxy_local_hostname }}"
