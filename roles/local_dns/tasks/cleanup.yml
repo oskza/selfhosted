@@ -3,7 +3,7 @@
     project_src: "{{ directories.services }}/pihole"
     state: absent
     remove_images: all
-    volumes: true
+    remove_volumes: true
   ignore_errors: true
 
 - name: delete pihole directory
@@ -24,7 +24,7 @@
     replace: 'DNSStubListener=yes'
   register: dns_revert
 
-- name: revert resolv.conf symlink to default
+- name: revert resolv.conf symlink
   ansible.builtin.file:
     src: /usr/lib/systemd/resolv.conf
     dest: /etc/resolv.conf
@@ -32,7 +32,7 @@
     force: true
   when: dns_revert.changed
 
-- name: restart systemd-resolved to apply revert
+- name: restart systemd-resolved
   ansible.builtin.systemd:
     name: systemd-resolved
     state: restarted
@@ -43,7 +43,7 @@
   register: network_interface
   changed_when: false
 
-- name: revert netplan configuration to default
+- name: revert netplan config
   ansible.builtin.copy:
     dest: /etc/netplan/{{ netplan_filename }}
     content: |
