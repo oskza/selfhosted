@@ -15,3 +15,4 @@ pihole:
     - "{{ vault_pihole_host }},{{ proxy_local_hostname }}"
     - "{{ vault_proxy_public_hostname }},{{ proxy_local_hostname }}"
     - "{{ vault_portainer_public_hostname }},{{ proxy_local_hostname }}"
+    - "{{ vault_code_server_public_hostname }},{{ proxy_local_hostname }}"

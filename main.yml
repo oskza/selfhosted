@@ -19,3 +19,4 @@
     - reverse_proxy
     - portainer_manager
     - cloudflare_connector
+    - code_server

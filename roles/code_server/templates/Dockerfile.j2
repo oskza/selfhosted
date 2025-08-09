@@ -1,0 +1,14 @@
+FROM linuxserver/code-server:{{ code_server.version }}
+
+# Create SSH keys & Git Config
+RUN mkdir -p {{ code_server.dirs.home }}/.ssh && [ -f {{ code_server.dirs.home }}/.ssh/id_rsa ] || ssh-keygen -t rsa -f {{ code_server.dirs.home }}/.ssh/id_rsa -N "" && \
+    git config --file /config/.gitconfig user.email {{ code_server.git.email }} && \
+    git config --file /config/.gitconfig user.name {{ code_server.git.username }} && \
+    git config --file /config/.gitconfig init.defaultBranch main
+
+# Install Docker CLI
+RUN apt-get update && apt-get install -y ca-certificates curl gnupg lsb-release && \
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add - && \
+    echo "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null && \
+    apt-get update && apt-get install -y docker-ce-cli && apt-get clean && rm -rf /var/lib/apt/lists/* && \
+    groupadd -r -g {{ code_server.docker_gid }} docker && usermod -aG docker abc

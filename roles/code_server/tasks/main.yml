@@ -1,0 +1,25 @@
+- name: setup code-server directory
+  ansible.builtin.file:
+    path: "{{ directories.services }}/code-server"
+    state: directory
+    owner: "{{ main_user.name }}"
+    group: "{{ main_user.name }}"
+    mode: 0755
+
+- name: deploy code-server from template files
+  ansible.builtin.template:
+    src: "templates/{{ filename }}.j2"
+    dest: "{{ directories.services }}/code-server/{{ filename }}"
+    owner: "{{ main_user.name }}"
+    group: "{{ main_user.name }}"
+    mode: 0644
+  loop:
+    - Dockerfile
+    - docker-compose.yml
+  loop_control:
+    loop_var: filename
+
+- name: run code-server using docker compose
+  community.docker.docker_compose_v2:
+    project_src: "{{ directories.services }}/code-server"
+    build: always

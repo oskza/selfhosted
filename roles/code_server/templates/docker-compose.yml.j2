@@ -1,0 +1,36 @@
+services:
+  code-server:
+    build:
+      context: .
+    image: my-code-server
+    container_name: code-server
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - data:{{ code_server.dirs.home }}
+{% for workspace in code_server.dirs.workspaces %}
+      - {{ workspace.src }}:{{ workspace.dest }}
+{% endfor %}
+    environment:
+      TZ: {{ timezone }}
+      PUID: {{ main_user.uid }}
+      PGID: {{ main_user.gid }}
+      PASSWORD: {{ code_server.password }}
+      SUDO_PASSWORD: {{ code_server.sudo_password }}
+      PROXY_DOMAIN: {{ code_server.host }}
+      PORT: {{ code_server.port }}
+      HOME: {{ code_server.dirs.home }}
+      DEFAULT_WORKSPACE: {{ code_server.dirs.workspaces | selectattr('id', 'equalto', 'default_workspace') | map(attribute='dest') | first }}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.code-server.rule=Host(`{{ code_server.host }}`)"
+      - "traefik.http.routers.code-server.entrypoints=https"
+      - "traefik.http.routers.code-server.tls=true"
+      - "traefik.http.services.code-server.loadbalancer.server.port={{ code_server.port }}"
+networks:
+  default:
+    name: proxy_net
+    external: true
+volumes:
+  data:
+    name: code-server_data
