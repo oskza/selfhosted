@@ -1,4 +1,4 @@
-- name: stop and remove code-server container, volumes and image
+- name: stop and remove code-server container, volume and image
   community.docker.docker_compose_v2:
     project_src: "{{ directories.services }}/code-server"
     state: absent
