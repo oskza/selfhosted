@@ -20,3 +20,4 @@
     - portainer_manager
     - cloudflare_connector
     - code_server
+    - speedtest_tracker

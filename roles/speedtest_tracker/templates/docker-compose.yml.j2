@@ -1,0 +1,34 @@
+services:
+  speedtest-tracker:
+    image: linuxserver/speedtest-tracker:{{ speedtest.version }}
+    container_name: speedtest-tracker
+    restart: unless-stopped
+    volumes:
+      - data:/config
+    environment:
+      TZ: {{ timezone }}
+      PUID: {{ main_user.uid }}
+      PGID: {{ main_user.gid }}
+      APP_NAME: {{ speedtest.app.name }}
+      APP_KEY: {{ speedtest.app.key }}
+      DB_CONNECTION: {{ speedtest.db }}
+      PUBLIC_DASHBOARD: {{ speedtest.dashboard | default(false) }}
+      PRUNE_RESULTS_OLDER_THAN: {{ speedtest.prune_days | default(0) }}
+{% if speedtest.admin is defined %}      
+      ADMIN_NAME: {{ speedtest.admin.name | default('Admin') }}
+      ADMIN_EMAIL: {{ speedtest.admin.email }}
+      ADMIN_PASSWORD: {{ speedtest.admin.password }}
+{% endif %}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.speedtest.rule=Host(`{{ speedtest.host }}`)"
+      - "traefik.http.routers.speedtest.entrypoints=https"
+      - "traefik.http.routers.speedtest.tls=true"
+      - "traefik.http.services.speedtest.loadbalancer.server.port={{ speedtest.port }}"
+networks:
+  default:
+    name: proxy_net
+    external: true
+volumes:
+  data:
+    name: speedtest_data

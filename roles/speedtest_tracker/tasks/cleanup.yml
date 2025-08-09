@@ -1,0 +1,13 @@
+- name: stop and remove speedtest tracker container, volume and image
+  community.docker.docker_compose_v2:
+    project_src: "{{ directories.services }}/speedtest-tracker"
+    state: absent
+    remove_images: all
+    remove_volumes: true
+  ignore_errors: true
+
+- name: delete speedtest tracker directory
+  ansible.builtin.file:
+    path: "{{ directories.services }}/speedtest-tracker"
+    state: absent
+  ignore_errors: true

@@ -1,0 +1,13 @@
+speedtest:
+  version: 1.6.6
+  host: "{{ vault_speedtest_host }}"
+  port: "{{ vault_speedtest_port }}"
+  db: sqlite
+  prune_days: 30
+  dashboard: true
+  app:
+    name: 'Speedtest Tracker'
+    key: "{{ vault_speedtest_app_key }}"
+  admin:
+    email: "{{ vault_admin_email }}"
+    password: "{{ vault_admin_password }}"

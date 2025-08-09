@@ -1,0 +1,19 @@
+- name: setup speedtest tracker directory
+  ansible.builtin.file:
+    path: "{{ directories.services }}/speedtest-tracker"
+    state: directory
+    owner: "{{ main_user.name }}"
+    group: "{{ main_user.name }}"
+    mode: 0755
+
+- name: deploy speedtest tracker from template file
+  ansible.builtin.template:
+    src: templates/docker-compose.yml.j2
+    dest: "{{ directories.services }}/speedtest-tracker/docker-compose.yml"
+    owner: "{{ main_user.name }}"
+    group: "{{ main_user.name }}"
+    mode: 0644
+
+- name: run speedtest tracker using docker compose
+  community.docker.docker_compose_v2:
+    project_src: "{{ directories.services }}/speedtest-tracker"
