@@ -1,0 +1,4 @@
+portainer:
+  version: 2.32.0
+  host: "{{ vault_portainer_host }}"
+  port: "{{ vault_portainer_port }}"

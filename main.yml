@@ -17,3 +17,4 @@
     - docker_host
     - local_dns
     - reverse_proxy
+    - portainer_manager

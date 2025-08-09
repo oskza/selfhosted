@@ -14,3 +14,4 @@ pihole:
   cname_records:
     - "{{ vault_pihole_host }},{{ proxy_local_hostname }}"
     - "{{ vault_proxy_public_hostname }},{{ proxy_local_hostname }}"
+    - "{{ vault_portainer_public_hostname }},{{ proxy_local_hostname }}"
