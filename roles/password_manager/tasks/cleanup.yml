@@ -1,0 +1,13 @@
+- name: stop and remove vaultwarden container, volume and image
+  community.docker.docker_compose_v2:
+    project_src: "{{ directories.services }}/vaultwarden"
+    state: absent
+    remove_images: all
+    remove_volumes: true
+  ignore_errors: true
+
+- name: delete vaultwarden directory
+  ansible.builtin.file:
+    path: "{{ directories.services }}/vaultwarden"
+    state: absent
+  ignore_errors: true

@@ -21,3 +21,4 @@
     - cloudflare_connector
     - code_server
     - speedtest_tracker
+    - password_manager

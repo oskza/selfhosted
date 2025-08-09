@@ -1,0 +1,4 @@
+vaultwarden:
+  version: latest
+  host: "{{ vault_vaultwarden_host }}"
+  port: "{{ vault_vaultwarden_port }}"
