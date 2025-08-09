@@ -63,6 +63,13 @@
     - net-tools
     - curl
     - nano
+    - git
+    - unzip
+    - wget
+    - gnupg
+    - lsb-release
+    - python3
+    - python3-pip
   loop_control:
     loop_var: pkg
 
