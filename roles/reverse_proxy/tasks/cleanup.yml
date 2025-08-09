@@ -3,7 +3,7 @@
     project_src: "{{ directories.services }}/traefik"
     state: absent
     remove_images: all
-    volumes: true
+    remove_volumes: true
   ignore_errors: true
 
 - name: delete traefik directory
