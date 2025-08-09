@@ -1,0 +1,36 @@
+- name: create media directory structure when doesnt exist
+  ansible.builtin.file:
+    path: "{{ directories.media }}/{{ dir }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 777
+  loop:
+    - media/anime
+    - media/movies
+    - media/tv
+    - downloads/torrents/complete
+    - downloads/torrents/incomplete
+    - downloads/tube
+  loop_control:
+    loop_var: dir
+
+- name: create media server directory
+  ansible.builtin.file:
+    path: "{{ directories.services }}/media-server"
+    state: directory
+    owner: "{{ main_user.name }}"
+    group: "{{ main_user.name }}"
+    mode: 0755
+
+- name: deploy media server from template file
+  ansible.builtin.template:
+    src: templates/docker-compose.yml.j2
+    dest: "{{ directories.services }}/media-server/docker-compose.yml"
+    owner: "{{ main_user.name }}"
+    group: "{{ main_user.name }}"
+    mode: 0644
+
+- name: run media server using docker compose
+  community.docker.docker_compose_v2:
+    project_src: "{{ directories.services }}/media-server"

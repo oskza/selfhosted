@@ -1,0 +1,58 @@
+services:
+{% for service in media_server.services %}
+  {{ service.id }}:
+    image: ghcr.io/hotio/{{ service.id }}:{{ service.version }}
+    container_name: {{ service.id }}
+    restart: unless-stopped
+    logging:
+      driver: json-file
+    networks:
+      - media_net
+      - proxy_net
+{% if service.id == 'plex' %}
+    ports:
+      - {{ service.port }}:{{ service.port }}
+{% endif %}
+    volumes:
+      - {{ service.id }}_data:/config
+{% if service.id in ['sonarr', 'radarr', 'bazarr'] %}
+      - {{ media_server.dirs.media_data }}:/media_data
+{% elif service.id == 'qbittorrent' %}
+      - {{ media_server.dirs.torrents }}:/media_data/downloads/torrents
+{% elif service.id == 'plex' %}
+      - {{ media_server.dirs.media_content }}:/media_data/media
+      - plex_transcode:/transcode
+{% endif %}
+    environment:
+      TZ: {{ timezone }}
+      PUID: {{ main_user.uid }}
+      PGID: {{ main_user.gid }}
+      UMASK: {{ media_server.umask }}
+      WEBUI_PORTS: {{ service.port }}/tcp,{{ service.port }}/udp
+{% if service.id == 'plex' %}
+      PLEX_ADVERTISE_URL: {{ service.advertise_url }}
+      PLEX_CLAIM_TOKEN: {{ service.claim_token }}
+{% endif %}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.{{ service.id }}.rule=Host(`{{ service.host }}`)"
+      - "traefik.http.routers.{{ service.id }}.entrypoints=https"
+      - "traefik.http.routers.{{ service.id }}.tls=true"
+      - "traefik.http.services.{{ service.id }}.loadbalancer.server.port={{ service.port }}"
+      - "traefik.docker.network=proxy_net"
+{% endfor %}
+
+networks:
+  media_net:
+    name: media_net
+  proxy_net:
+    name: proxy_net
+    external: true
+
+volumes:
+{% for service in media_server.services %}
+  {{ service.id }}_data:
+    name: "{{ service.id }}_data"
+{% endfor %}
+  plex_transcode:
+    name: plex_transcode

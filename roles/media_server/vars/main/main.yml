@@ -1,0 +1,33 @@
+media_server:
+  umask: '002'
+  dirs:
+    media_data: "{{ directories.media }}"
+    media_content: "{{ directories.media }}/media"
+    torrents: "{{ directories.media }}/downloads/torrents"
+  services:
+    - id: plex
+      version: release-1.42.1.10054-f333bdaa8
+      host: "{{ vault_plex_host }}"
+      port: "{{ vault_plex_port }}"
+      advertise_url: "{{ vault_plex_advertise_url }}"
+      claim_token: "{{ vault_plex_claim_token }}"
+    - id: radarr
+      version: nightly-5.27.4.10154
+      host: "{{ vault_radarr_host }}"
+      port: "{{ vault_radarr_port }}"
+    - id: sonarr
+      version: release-4.0.15.2941
+      host: "{{ vault_sonarr_host }}"
+      port: "{{ vault_sonarr_port }}"
+    - id: bazarr
+      version: nightly-873b444
+      host: "{{ vault_bazarr_host }}"
+      port: "{{ vault_bazarr_port }}"
+    - id: qbittorrent
+      version: release-5.1.2
+      host: "{{ vault_qbit_host }}"
+      port: "{{ vault_qbit_port }}"
+    - id: jackett
+      version: release-0.22.2248
+      host: "{{ vault_jackett_host }}"
+      port: "{{ vault_jackett_port }}"
