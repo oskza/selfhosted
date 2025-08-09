@@ -13,8 +13,8 @@ services:
       - data:/etc/pihole
     environment:
       TZ: {{ timezone }}
-      PIHOLE_UID: "{{ main_user.uid }}"
-      PIHOLE_GID: "{{ main_user.gid }}"
+      PIHOLE_UID: {{ main_user.uid }}
+      PIHOLE_GID: {{ main_user.gid }}
       FTLCONF_webserver_api_password: {{ pihole.password }}
       FTLCONF_dns_upstreams: "{{ dns_resolver_1 }};{{ dns_resolver_2 }}"
       FTLCONF_dns_listeningMode: all
