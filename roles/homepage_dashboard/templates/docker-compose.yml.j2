@@ -1,0 +1,34 @@
+services:
+{% for instance in homepage.instances %}
+  homepage_{{ instance.name }}:
+    image: ghcr.io/gethomepage/homepage:{{ homepage.version }}
+    container_name: homepage_{{ instance.name }}
+    restart: unless-stopped
+    dns:
+      - {{ local_dns_internal_ip }}
+    environment:
+      HOMEPAGE_ALLOWED_HOSTS: {{ instance.host }}
+      PORT: {{ instance.port }}
+      LOG_TARGETS: stdout
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./icons:/app/public/icons
+      - ./images:/app/public/images
+      - {{ instance.name }}_data:/app/config
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.homepage-{{ instance.name }}.rule=Host(`{{ instance.host }}`)"
+      - "traefik.http.routers.homepage-{{ instance.name }}.entrypoints=https"
+      - "traefik.http.routers.homepage-{{ instance.name }}.tls=true"
+      - "traefik.http.services.homepage-{{ instance.name }}.loadbalancer.server.port={{ instance.port }}"
+{% endfor %}
+networks:
+  default:
+    name: proxy_net
+    external: true
+volumes:
+{% for instance in homepage.instances %}
+  {{ instance.name }}_data:
+    name: homepage_{{ instance.name }}_data
+{% endfor %}

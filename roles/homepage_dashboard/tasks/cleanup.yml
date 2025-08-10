@@ -1,0 +1,13 @@
+- name: stop and remove homepage container, volumes and image
+  community.docker.docker_compose_v2:
+    project_src: "{{ directories.services }}/homepage"
+    state: absent
+    remove_images: all
+    remove_volumes: true
+  ignore_errors: true
+
+- name: delete homepage directory
+  ansible.builtin.file:
+    path: "{{ directories.services }}/homepage"
+    state: absent
+  ignore_errors: true

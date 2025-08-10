@@ -1,0 +1,30 @@
+- glances:
+    url: http://glances:{{ glances_port }}
+    version: 4
+    cpu: false
+    mem: false
+    cputemp: true
+    uptime: true
+    disk:
+      - /etc/hosts
+{% for drive in drives.additional %}
+      - {{ drive.mount_point }}
+{% endfor %}
+
+- search:
+    provider: google
+    target: _blank
+
+- datetime:
+    text_size: sm
+    format:
+      timeStyle: short
+      dateStyle: medium
+      hourCycle: h23
+
+- openweathermap:
+    latitude: {{ open_weather_map.latitude }}
+    longitude: {{ open_weather_map.longitude }}
+    provider: openweathermap
+    units: metric
+    cache: 5

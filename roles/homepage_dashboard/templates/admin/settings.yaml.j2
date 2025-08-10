@@ -1,0 +1,31 @@
+title: Admin
+instanceName: admin
+language: en
+hideVersion: true
+target: _blank
+
+theme: dark
+color: neutral
+headerStyle: clean
+useEqualHeights: true
+
+cardBlur: ""
+background: 
+    image: /images/background.png
+    opacity: 40
+
+quicklaunch:
+  searchDescriptions: true
+
+providers:
+  openweathermap: {{ open_weather_map.api_key }}
+
+layout:
+    Performance:
+        icon: mdi-poll-#{{ homepage.icon_color }}
+        style: row
+        columns: 7
+    Bookmarks:
+        icon: mdi-bookmark-#{{ homepage.icon_color }}
+        style: row
+        columns: 5

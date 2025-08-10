@@ -19,6 +19,7 @@
     - reverse_proxy
     - portainer_manager
     - system_monitor
+    - homepage_dashboard
     - cloudflare_connector
     - code_server
     - speedtest_tracker
