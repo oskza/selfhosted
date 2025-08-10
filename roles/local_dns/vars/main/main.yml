@@ -1,7 +1,5 @@
 netplan_filename: 50-cloud-init.yaml
 
-local_dns_internal_ip: "{{ vault_local_dns_internal_ip }}"
-
 proxy_local_hostname: "{{ vault_proxy_local_hostname }}"
 
 pihole:
