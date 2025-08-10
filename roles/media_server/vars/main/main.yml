@@ -11,23 +11,65 @@ media_server:
       port: "{{ vault_plex_port }}"
       advertise_url: "{{ vault_plex_advertise_url }}"
       claim_token: "{{ vault_plex_claim_token }}"
+      homepage:
+        name: Plex
+        description: Media Server
+        icon: /icons/plex.png
+        group: Media
+        key: "{{ vault_plex_homepage_key }}"
+        weight: 1
     - id: radarr
       version: nightly-5.27.4.10154
       host: "{{ vault_radarr_host }}"
       port: "{{ vault_radarr_port }}"
+      homepage:
+        name: Radarr
+        description: Movies Manager
+        icon: /icons/radarr.png
+        group: Media
+        key: "{{ vault_radarr_homepage_key }}"
+        weight: 2
     - id: sonarr
       version: release-4.0.15.2941
       host: "{{ vault_sonarr_host }}"
       port: "{{ vault_sonarr_port }}"
+      homepage:
+        name: Sonarr
+        description: TV Manager
+        icon: /icons/sonarr.png
+        group: Media
+        key: "{{ vault_sonarr_homepage_key }}"
+        weight: 3
     - id: bazarr
       version: nightly-873b444
       host: "{{ vault_bazarr_host }}"
       port: "{{ vault_bazarr_port }}"
+      homepage:
+        name: Bazarr
+        description: Subtitles Manager
+        icon: /icons/bazarr.png
+        group: Media
+        key: "{{ vault_bazarr_homepage_key }}"
+        weight: 4
     - id: qbittorrent
       version: release-5.1.2
       host: "{{ vault_qbit_host }}"
       port: "{{ vault_qbit_port }}"
+      homepage:
+        name: qBittorrent
+        description: Torrent Client
+        icon: /icons/qbittorrent.png
+        group: Download
+        username: "{{ vault_qbit_homepage_username }}"
+        password: "{{ vault_qbit_homepage_password }}"
+        weight: 1
     - id: jackett
       version: release-0.22.2248
       host: "{{ vault_jackett_host }}"
       port: "{{ vault_jackett_port }}"
+      homepage:
+        name: Jackett
+        description: Torrent Trackers API Support
+        icon: /icons/jackett.png
+        group: Download
+        weight: 2

@@ -11,3 +11,10 @@ speedtest:
   admin:
     email: "{{ vault_admin_email }}"
     password: "{{ vault_admin_password }}"
+  homepage:
+    name: Speedtest
+    description: Speed Test Tracker
+    icon: /icons/speedtest.png
+    group: System
+    bitratePrecision: 0
+    weight: 1

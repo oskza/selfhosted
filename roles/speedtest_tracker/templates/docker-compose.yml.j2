@@ -25,6 +25,15 @@ services:
       - "traefik.http.routers.speedtest.entrypoints=https"
       - "traefik.http.routers.speedtest.tls=true"
       - "traefik.http.services.speedtest.loadbalancer.server.port={{ speedtest.port }}"
+      - "homepage.instance.admin.name={{ speedtest.homepage.name }}"
+      - "homepage.instance.admin.description={{ speedtest.homepage.description }}"
+      - "homepage.instance.admin.icon={{ speedtest.homepage.icon }}"
+      - "homepage.instance.admin.group={{ speedtest.homepage.group }}"
+      - "homepage.instance.admin.href=https://{{ speedtest.host }}"
+      - "homepage.instance.admin.weight={{ speedtest.homepage.weight }}"
+      - "homepage.instance.admin.widget.type=speedtest"
+      - "homepage.instance.admin.widget.url=http://speedtest-tracker"
+      - "homepage.instance.admin.widget.bitratePrecision={{ speedtest.homepage.bitratePrecision }}"
 networks:
   default:
     name: proxy_net

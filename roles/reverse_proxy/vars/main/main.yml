@@ -6,10 +6,19 @@ traefik:
   allow_list:
     - "{{ vault_proxy_subnet }}"
     - "{{ vault_local_subnet }}"
-  cloudflare_credentials:
-    api_email: "{{ vault_cf_api_email }}"
-    dns_api_token: "{{ vault_cf_dns_api_token }}"
-  dashboard_credentials: "{{ vault_dashboard_hashed }}"
   dirs:
     acme: /acme
     config: /config
+  cloudflare_credentials:
+    api_email: "{{ vault_cf_api_email }}"
+    dns_api_token: "{{ vault_cf_dns_api_token }}"
+  dashboard_credentials: 
+    hashed: "{{ vault_dashboard_hashed }}"
+    username: "{{ vault_dashboard_username }}"
+    password: "{{ vault_dashboard_password }}"
+  homepage:
+    name: Traefik
+    description: Reverse Proxy
+    icon: /icons/traefik.png
+    group: System
+    weight: 5

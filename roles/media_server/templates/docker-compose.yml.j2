@@ -40,6 +40,23 @@ services:
       - "traefik.http.routers.{{ service.id }}.tls=true"
       - "traefik.http.services.{{ service.id }}.loadbalancer.server.port={{ service.port }}"
       - "traefik.docker.network=proxy_net"
+      - "homepage.instance.admin.name={{ service.homepage.name }}"
+      - "homepage.instance.admin.description={{ service.homepage.description }}"
+      - "homepage.instance.admin.icon={{ service.homepage.icon }}"
+      - "homepage.instance.admin.group={{ service.homepage.group }}"
+      - "homepage.instance.admin.href=https://{{ service.host }}"
+      - "homepage.instance.admin.weight={{ service.homepage.weight }}"
+      - "homepage.instance.admin.widget.type={{ service.id }}"
+      - "homepage.instance.admin.widget.url=http://{{ service.id }}:{{ service.port }}"
+{% if service.id in ['plex', 'sonarr', 'radarr', 'bazarr'] %}
+      - "homepage.instance.admin.widget.key={{ service.homepage.key }}"
+{% elif service.id == 'qbittorrent' %}
+      - "homepage.instance.admin.widget.username={{ service.homepage.username }}"
+      - "homepage.instance.admin.widget.password={{ service.homepage.password }}"
+{% endif %}
+{% if service.id == 'plex' %}
+      - "homepage.instance.admin.widget.fields=[\"streams\", \"movies\", \"tv\"]"
+{% endif %}
 {% endfor %}
 
 networks:

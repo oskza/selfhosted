@@ -20,7 +20,7 @@ services:
       - data:{{ traefik.dirs.config }}
       - acme:{{ traefik.dirs.acme }}
     environment:
-      TRAEFIK_DASHBOARD_CREDENTIALS: {{ traefik.dashboard_credentials }}
+      TRAEFIK_DASHBOARD_CREDENTIALS: {{ traefik.dashboard_credentials.hashed }}
       CF_API_EMAIL: {{ traefik.cloudflare_credentials.api_email }}
       CF_DNS_API_TOKEN: {{ traefik.cloudflare_credentials.dns_api_token }}
     command:
@@ -51,7 +51,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.traefik.entrypoints=http"
       - "traefik.http.routers.traefik.rule=Host(`{{ traefik.host }}`)"
-      - "traefik.http.middlewares.traefik-auth.basicauth.users={{ traefik.dashboard_credentials }}"
+      - "traefik.http.middlewares.traefik-auth.basicauth.users={{ traefik.dashboard_credentials.hashed }}"
       - "traefik.http.services.traefik.loadbalancer.server.port=80"
       - "traefik.http.middlewares.traefik-https-redirect.redirectscheme.scheme=https"
       - "traefik.http.middlewares.sslheader.headers.customrequestheaders.X-Forwarded-Proto=https"
@@ -64,6 +64,16 @@ services:
       - "traefik.http.routers.traefik-secure.tls.domains[0].main={{ traefik.domain_name }}"
       - "traefik.http.routers.traefik-secure.tls.domains[0].sans=*.{{ traefik.domain_name }}"
       - "traefik.http.routers.traefik-secure.service=api@internal"
+      - "homepage.instance.admin.name={{ traefik.homepage.name }}"
+      - "homepage.instance.admin.description={{ traefik.homepage.description }}"
+      - "homepage.instance.admin.icon={{ traefik.homepage.icon }}"
+      - "homepage.instance.admin.group={{ traefik.homepage.group }}"
+      - "homepage.instance.admin.href=https://{{ traefik.host }}"
+      - "homepage.instance.admin.weight={{ traefik.homepage.weight }}"
+      - "homepage.instance.admin.widget.type=traefik"
+      - "homepage.instance.admin.widget.url=https://{{ traefik.host }}"
+      - "homepage.instance.admin.widget.username={{ traefik.dashboard_credentials.username }}"
+      - "homepage.instance.admin.widget.password={{ traefik.dashboard_credentials.password }}"
 networks:
   proxy_net:
     name: proxy_net

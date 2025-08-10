@@ -17,3 +17,9 @@ code_server:
       - id: services
         src: "{{ directories.home }}/services"
         dest: /services
+  homepage:
+    name: VS Code
+    description: Code Server
+    icon: /icons/vscode.png
+    group: Utils
+    weight: 1

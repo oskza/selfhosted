@@ -13,6 +13,12 @@ services:
       - "traefik.http.routers.vaultwarden.entrypoints=https"
       - "traefik.http.routers.vaultwarden.tls=true"
       - "traefik.http.services.vaultwarden.loadbalancer.server.port={{ vaultwarden.port }}"
+      - "homepage.instance.admin.name={{ vaultwarden.homepage.name }}"
+      - "homepage.instance.admin.description={{ vaultwarden.homepage.description }}"
+      - "homepage.instance.admin.icon={{ vaultwarden.homepage.icon }}"
+      - "homepage.instance.admin.group={{ vaultwarden.homepage.group }}"
+      - "homepage.instance.admin.href=https://{{ vaultwarden.host }}"
+      - "homepage.instance.admin.weight={{ vaultwarden.homepage.weight }}"
 networks:
   default:
     name: proxy_net
