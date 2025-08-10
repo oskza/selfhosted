@@ -1,0 +1,19 @@
+- name: setup glances directory
+  ansible.builtin.file:
+    path: "{{ directories.services }}/glances"
+    state: directory
+    owner: "{{ main_user.name }}"
+    group: "{{ main_user.name }}"
+    mode: 0755
+
+- name: deploy glances from template file
+  ansible.builtin.template:
+    src: templates/docker-compose.yml.j2
+    dest: "{{ directories.services }}/glances/docker-compose.yml"
+    owner: "{{ main_user.name }}"
+    group: "{{ main_user.name }}"
+    mode: 0644
+
+- name: run glances using docker compose
+  community.docker.docker_compose_v2:
+    project_src: "{{ directories.services }}/glances"

@@ -1,0 +1,4 @@
+glances:
+  version: 4.3.3
+  host: "{{ vault_glances_host }}"
+  port: "{{ vault_glances_port }}"

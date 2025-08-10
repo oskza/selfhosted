@@ -1,0 +1,24 @@
+services:
+  glances:
+    image: nicolargo/glances:{{ glances.version }}
+    container_name: glances
+    restart: unless-stopped
+    pid: host
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+{% for drive in drives.additional %}
+      - {{ drive.mount_point }}:{{ drive.mount_point }}
+{% endfor %}      
+    environment:
+      TZ: {{ timezone }}
+      GLANCES_OPT: -w
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.glances.rule=Host(`{{ glances.host }}`)"
+      - "traefik.http.routers.glances.entrypoints=https"
+      - "traefik.http.routers.glances.tls=true"
+      - "traefik.http.services.glances.loadbalancer.server.port={{ glances.port }}"
+networks:
+  default:
+    name: proxy_net
+    external: true

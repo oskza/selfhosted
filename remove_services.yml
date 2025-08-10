@@ -12,7 +12,8 @@
         - speedtest_tracker
         - code_server
         - cloudflare_connector
-        - portainer
+        - system_monitor
+        - portainer_manager
         - reverse_proxy
         - local_dns
       loop_control:

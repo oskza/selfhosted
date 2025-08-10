@@ -1,0 +1,12 @@
+- name: stop and remove glances container and image
+  community.docker.docker_compose_v2:
+    project_src: "{{ directories.services }}/glances"
+    state: absent
+    remove_images: all
+  ignore_errors: true
+
+- name: delete glances directory
+  ansible.builtin.file:
+    path: "{{ directories.services }}/glances"
+    state: absent
+  ignore_errors: true
