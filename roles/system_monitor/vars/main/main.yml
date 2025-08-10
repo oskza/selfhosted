@@ -2,3 +2,9 @@ glances:
   version: 4.3.3
   host: "{{ vault_glances_host }}"
   port: "{{ vault_glances_port }}"
+  homepage:
+    name: Glances
+    description: See More
+    icon: /icons/glances.png
+    group: Performance
+    weight: 700
