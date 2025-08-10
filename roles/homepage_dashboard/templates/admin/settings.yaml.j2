@@ -11,8 +11,8 @@ useEqualHeights: true
 
 cardBlur: ""
 background: 
-    image: /images/background.png
-    opacity: 40
+  image: /images/background.png
+  opacity: 40
 
 quicklaunch:
   searchDescriptions: true
@@ -21,11 +21,27 @@ providers:
   openweathermap: {{ open_weather_map.api_key }}
 
 layout:
-    Performance:
-        icon: mdi-poll-#{{ homepage.icon_color }}
-        style: row
-        columns: 7
-    Bookmarks:
-        icon: mdi-bookmark-#{{ homepage.icon_color }}
-        style: row
-        columns: 5
+  Performance:
+    icon: mdi-poll-#{{ homepage.icon_color }}
+    style: row
+    columns: 7
+  System:
+    icon: mdi-cog-#{{ homepage.icon_color }}
+    style: row
+    columns: 5
+  Media:
+    icon: mdi-play-#{{ homepage.icon_color }}
+    style: row
+    columns: 4
+  Download:
+    icon: mdi-download-#{{ homepage.icon_color }}
+    style: row
+    columns: 4
+  Utils:
+    icon: mdi-tools-#{{ homepage.icon_color }}
+    style: row
+    columns: 4
+  Bookmarks:
+    icon: mdi-bookmark-#{{ homepage.icon_color }}
+    style: row
+    columns: 5
