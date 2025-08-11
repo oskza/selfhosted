@@ -7,6 +7,7 @@ services:
       - data:/config
     environment:
       TZ: {{ timezone }}
+      DISPLAY_TIMEZONE: {{ timezone }}
       PUID: {{ main_user.uid }}
       PGID: {{ main_user.gid }}
       APP_NAME: {{ speedtest.app.name }}
