@@ -11,6 +11,7 @@ services:
       - "host.docker.internal:host-gateway"
     networks:
       - proxy_net
+      - tunnel_net
     ports:
       - 80:80
       - 443:443
@@ -76,7 +77,8 @@ services:
       - "homepage.instance.admin.widget.password={{ traefik.dashboard_credentials.password }}"
 networks:
   proxy_net:
-    name: proxy_net
+    external: true
+  tunnel_net:
     external: true
 volumes:
   data:
