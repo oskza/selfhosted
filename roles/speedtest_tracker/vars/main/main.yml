@@ -3,8 +3,10 @@ speedtest:
   host: "{{ vault_speedtest_host }}"
   port: "{{ vault_speedtest_port }}"
   db: sqlite
-  prune_days: 30
   dashboard: true
+  servers: "{{ vault_speedtest_servers }}"
+  schedule: "6 */2 * * *"
+  prune_days: 30
   app:
     name: 'Speedtest Tracker'
     key: "{{ vault_speedtest_app_key }}"
