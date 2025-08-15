@@ -5,10 +5,10 @@ cloudflared:
     id: "{{ vault_tunnel_id }}"
     token: "{{ vault_tunnel_token }}"
   homepage:
-    name: Cloudflared
+    title: Cloudflared
     description: Cloudflare Tunnel
     icon: /icons/cloudflare.png
     group: System
+    order: 3
     url: https://dash.cloudflare.com
     token: "{{ vault_homepage_token }}"
-    weight: 3
