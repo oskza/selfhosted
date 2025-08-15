@@ -3,8 +3,8 @@ vaultwarden:
   host: "{{ vault_vaultwarden_host }}"
   port: "{{ vault_vaultwarden_port }}"
   homepage:
-    name: Vaultwarden
+    title: Vaultwarden
     description: Password Manager
     icon: /icons/vaultwarden.png
     group: Utils
-    weight: 2
+    order: 2

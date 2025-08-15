@@ -13,12 +13,12 @@ traefik:
     api_email: "{{ vault_cf_api_email }}"
     dns_api_token: "{{ vault_cf_dns_api_token }}"
   dashboard_credentials: 
-    hashed: "{{ vault_dashboard_hashed }}"
-    username: "{{ vault_dashboard_username }}"
-    password: "{{ vault_dashboard_password }}"
+    hashed: "{{ vault_traefik_dashboard_hashed }}"
+    username: "{{ vault_traefik_dashboard_username }}"
+    password: "{{ vault_traefik_dashboard_password }}"
   homepage:
-    name: Traefik
+    title: Traefik
     description: Reverse Proxy
     icon: /icons/traefik.png
     group: System
-    weight: 5
+    order: 5

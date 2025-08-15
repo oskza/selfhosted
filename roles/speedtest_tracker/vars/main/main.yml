@@ -11,12 +11,12 @@ speedtest:
     name: 'Speedtest Tracker'
     key: "{{ vault_speedtest_app_key }}"
   admin:
-    email: "{{ vault_admin_email }}"
-    password: "{{ vault_admin_password }}"
+    email: "{{ vault_speedtest_admin_email }}"
+    password: "{{ vault_speedtest_admin_password }}"
   homepage:
-    name: Speedtest
+    title: Speedtest
     description: Speed Test Tracker
     icon: /icons/speedtest.png
     group: System
+    order: 1
     bitratePrecision: 0
-    weight: 1

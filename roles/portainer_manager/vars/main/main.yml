@@ -3,10 +3,10 @@ portainer:
   host: "{{ vault_portainer_host }}"
   port: "{{ vault_portainer_port }}"
   homepage:
-    name: Portainer
+    title: Portainer
     description: Docker Manager
     icon: /icons/portainer.png
     group: System
+    order: 2
     env: 3
     token: "{{ vault_portainer_homepage_token }}"
-    weight: 2

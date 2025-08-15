@@ -18,11 +18,11 @@ services:
       - "traefik.http.routers.glances.entrypoints=https"
       - "traefik.http.routers.glances.tls=true"
       - "traefik.http.services.glances.loadbalancer.server.port={{ glances.port }}"
-      - "homepage.instance.admin.name={{ glances.homepage.name }}"
+      - "homepage.instance.admin.name={{ glances.homepage.title }}"
       - "homepage.instance.admin.description={{ glances.homepage.description }}"
       - "homepage.instance.admin.icon={{ glances.homepage.icon }}"
       - "homepage.instance.admin.group={{ glances.homepage.group }}"
-      - "homepage.instance.admin.weight={{ glances.homepage.weight }}"
+      - "homepage.instance.admin.weight={{ glances.homepage.order }}"
       - "homepage.instance.admin.href=https://{{ glances.host }}"
 networks:
   default:
