@@ -11,7 +11,7 @@ pihole:
     description: Local DNS & Ad Blocker
     icon: /icons/pihole.png
     group: System
-    key: "{{ vault_pihole_api_token }}"
+    key: "{{ vault_pihole_app_pass }}"
     weight: 4
   dns_records:
     - "{{ ansible_host }} {{ proxy_local_hostname }}"
