@@ -4,7 +4,7 @@ code_server:
   port: "{{ vault_code_port }}"
   password: "{{ vault_code_password }}"
   sudo_password: "{{ vault_code_sudo_password }}"
-  docker_gid: 988
+  docker_gid: "{{ vault_docker_guid }}"
   git:
     username: "{{ vault_code_git_username }}"
     email: "{{ vault_code_git_email }}"
@@ -18,8 +18,8 @@ code_server:
         src: "{{ directories.home }}/services"
         dest: /services
   homepage:
-    name: VS Code
+    title: VS Code
     description: Code Server
     icon: /icons/vscode.png
     group: Utils
-    weight: 1
+    order: 1
