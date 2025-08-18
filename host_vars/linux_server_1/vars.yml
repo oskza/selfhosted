@@ -27,16 +27,20 @@ drives:
       device: "{{ vault_storage_drive_device }}"
       mount_point: "{{ vault_storage_drive_mount_point }}"
       filesystem: ext4
-    - id: media
-      label: "{{ vault_media_drive_label }}"
-      device: "{{ vault_media_drive_device }}"
-      mount_point: "{{ vault_media_drive_mount_point }}"
+    - id: media_1
+      label: "{{ vault_media_1_drive_label }}"
+      device: "{{ vault_media_1_drive_device }}"
+      mount_point: "{{ vault_media_1_drive_mount_point }}"
+      filesystem: ntfs-3g
+    - id: media_2
+      label: "{{ vault_media_2_drive_label }}"
+      device: "{{ vault_media_2_drive_device }}"
+      mount_point: "{{ vault_media_2_drive_mount_point }}"
       filesystem: ntfs-3g
 
 directories:
   home: "/home/{{ main_user.name }}"
   services: "/home/{{ main_user.name }}/services"
-  media: "{{ drives.additional | selectattr('id', 'equalto', 'media') | map(attribute='mount_point') | first }}/data/media_data"
-  storage: "{{ drives.additional | selectattr('id', 'equalto', 'storage') | map(attribute='mount_point') | first }}/server_data"
-  backup: "{{ drives.additional | selectattr('id', 'equalto', 'storage') | map(attribute='mount_point') | first }}/server_data/backup"
-  workspace: "{{ drives.additional | selectattr('id', 'equalto', 'storage') | map(attribute='mount_point') | first }}/server_data/workspace"
+  storage: "{{ drives.additional | selectattr('id', 'equalto', 'storage') | map(attribute='mount_point') | first }}/data"
+  media_1: "{{ drives.additional | selectattr('id', 'equalto', 'media_1') | map(attribute='mount_point') | first }}/data_1"
+  media_2: "{{ drives.additional | selectattr('id', 'equalto', 'media_2') | map(attribute='mount_point') | first }}/data_2"

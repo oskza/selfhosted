@@ -1,7 +1,5 @@
 umask: '002'
 
-media_data_path: "{{ directories.media }}"
-
 media_services:
   - name: plex
     version: release-1.42.1.10054-f333bdaa8

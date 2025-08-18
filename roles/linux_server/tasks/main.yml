@@ -25,7 +25,9 @@
     owner: "{{ main_user.name }}"
     group: "{{ main_user.name }}"
     mode: 0755
-  loop: "{{ directories | dict2items | rejectattr('key', 'in', ['home', 'media']) | map(attribute='value') | list }}"
+  loop: "{{ directories | dict2items 
+            | rejectattr('key', 'match', '^(home|media(_.*)?)$')
+            | map(attribute='value') | list }}"
   loop_control:
     loop_var: dir
 

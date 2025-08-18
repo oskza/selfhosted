@@ -1,19 +1,28 @@
-- name: create media directory structure when doesnt exist
+- name: create media directories
   ansible.builtin.file:
-    path: "{{ directories.media }}/{{ dir }}"
+    path: "{{ item.0 }}/media/{{ item.1 }}"
     state: directory
     owner: root
     group: root
-    mode: 777
+    mode: 0777
+  with_nested:
+    - "{{ directories | dict2items
+         | selectattr('key', 'match', '^media(_.*)?$')
+         | map(attribute='value')
+         | list }}"
+    - [ "anime", "movies", "tv" ]
+
+- name: create download directories
+  ansible.builtin.file:
+    path: "{{ directories.media_1 }}/downloads/{{ item }}"
+    state: directory
+    owner: root
+    group: root
+    mode: '0777'
   loop:
-    - media/anime
-    - media/movies
-    - media/tv
-    - downloads/torrents/complete
-    - downloads/torrents/incomplete
-    - downloads/tube
-  loop_control:
-    loop_var: dir
+    - torrents/complete
+    - torrents/incomplete
+    - youtube
 
 - name: create media server directory
   ansible.builtin.file:
