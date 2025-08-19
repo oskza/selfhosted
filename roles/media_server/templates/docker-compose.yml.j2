@@ -17,13 +17,19 @@ services:
       - {{ service.name }}_data:/config
 {% if service.name == 'plex' %}
       - plex_transcode:/transcode
-      - {{ directories.media_1 }}/media:/data_1/media
-      - {{ directories.media_2 }}/media:/data_2/media
+{% for dir in directories | dict2items
+           | selectattr('key', 'match', '^media(_.*)?$')
+           | map(attribute='value') | list %}
+      - {{ dir }}/media:{{ dir | regex_replace('.*/(data_[^/]+)$', '/\\1') }}/media
+{% endfor %}
 {% elif service.name == 'qbittorrent' %}
       - {{ directories.media_1 }}/downloads/torrents:/data_1/downloads/torrents
 {% else %}
-      - {{ directories.media_1 }}:/data_1
-      - {{ directories.media_2 }}:/data_2
+{% for dir in directories | dict2items
+           | selectattr('key', 'match', '^media(_.*)?$')
+           | map(attribute='value') | list %}
+      - {{ dir }}:{{ dir | regex_replace('.*/(data_[^/]+)$', '/\\1') }}
+{% endfor %}
 {% endif %}
     environment:
       TZ: {{ timezone }}
