@@ -19,23 +19,6 @@
   loop_control:
     loop_var: dir
 
-- name: copy docker.yaml to homepage directory
-  ansible.builtin.copy:
-    src: docker.yaml
-    dest: "{{ directories.services }}/homepage/docker.yaml"
-    owner: "{{ main_user.name }}"
-    group: "{{ main_user.name }}"
-    mode: 0644
-
-- name: generate homepage config files from templates
-  ansible.builtin.template:
-    src: "templates/{{ item.0 }}/{{ item.1 }}.j2"
-    dest: "{{ directories.services }}/homepage/{{ item.0 }}/{{ item.1 }}"
-    owner: "{{ main_user.name }}"
-    group: "{{ main_user.name }}"
-    mode: 0644
-  loop: "{{ homepage.instances | map(attribute='name') | product(['bookmarks.yaml', 'services.yaml', 'settings.yaml', 'widgets.yaml']) | list }}"
-
 - name: deploy homepage from template file
   ansible.builtin.template:
     src: templates/docker-compose.yml.j2
@@ -48,17 +31,36 @@
   community.docker.docker_compose_v2:
     project_src: "{{ directories.services }}/homepage"
 
-- name: copy docker.yaml file into homepage containers
-  ansible.builtin.command:
-    cmd: "docker cp {{ directories.services }}/homepage/docker.yaml homepage_{{ instance }}:/app/config/docker.yaml"
+- name: generate and deploy homepage config files
+  include_tasks: generate_and_deploy_to_container.yml
   loop: "{{ homepage.instances | map(attribute='name') | list }}"
   loop_control:
-    loop_var: instance
+    loop_var: instance_name
 
-- name: copy config files into homepage containers
-  ansible.builtin.command:
-    cmd: "docker cp {{ directories.services }}/homepage/{{ item.0 }}/{{ item.1 }} homepage_{{ item.0 }}:/app/config/{{ item.1 }}"
-  loop: "{{ homepage.instances | map(attribute='name') | product(['bookmarks.yaml', 'services.yaml', 'settings.yaml', 'widgets.yaml']) | list }}"
 
-- name: restart homepage containers
-  ansible.builtin.command: "docker restart {{ homepage.instances | map(attribute='name') | map('regex_replace', '^(.*)$', 'homepage_\\1') | join(' ') }}"
+
+
+####
+# - name: copy docker.yaml content into homepage containers
+#   community.docker.docker_container_copy_into:
+#     container: "homepage_{{ instance }}"
+#     container_path: /app/config/docker.yaml
+#     content: "{{ lookup('file', 'docker.yaml') }}"
+#     mode: 0644
+#   loop: "{{ homepage.instances | map(attribute='name') | list }}"
+#   loop_control:
+#     loop_var: instance
+
+# - name: generate and deploy homepage config files
+#   vars:
+#     instance_name: "{{ item.0 }}"
+#     file_name: "{{ item.1 }}"
+#   include_tasks: generate_and_deploy_to_container.yml
+#   loop: "{{ homepage.instances | map(attribute='name') 
+#             | product(['bookmarks.yaml', 'services.yaml', 'settings.yaml', 'widgets.yaml']) | list }}"
+#   loop_control:
+#     label: "{{ item.0 }}:{{ item.1 }}"
+
+# - name: restart homepage containers
+#   ansible.builtin.command: "docker restart {{ homepage.instances | map(attribute='name') 
+#                                               | map('regex_replace', '^(.*)$', 'homepage_\\1') | join(' ') }}"

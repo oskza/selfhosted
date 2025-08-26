@@ -1,0 +1,31 @@
+{% set urls = (homepage.instances | selectattr('name', 'equalto', 'public') | first).bookmark_urls %}
+
+- Bookmarks:
+  - ChatGPT:
+    - icon: /icons/chatgpt.png
+      href: https://chatgpt.com
+      description: ''
+  - YouTube:
+    - icon: /icons/youtube.png
+      href: https://youtube.com
+      description: ''
+  - Google Drive:
+    - icon: /icons/gdrive.png
+      href: "{{ urls.gdrive }}"
+      description: ''
+  - Gmail:
+    - icon: /icons/gmail.png
+      href: "{{ urls.gmail }}"
+      description: ''
+  - IMDb:
+    - icon: /icons/imdb.png
+      href: https://imdb.com
+      description: ''
+  - Postman:
+    - icon: /icons/postman.svg
+      href: https://web.postman.co
+      description: ''
+  - PlaceHold:
+    - icon: /icons/placehold.png
+      href: https://placehold.jp/en.html
+      description: ''

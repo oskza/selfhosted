@@ -1,3 +1,5 @@
+{% set urls = (homepage.instances | selectattr('name', 'equalto', 'admin') | first).bookmark_urls %}
+
 - Bookmarks:
   - ChatGPT:
     - icon: /icons/chatgpt.png
@@ -5,19 +7,19 @@
       description: ''
   - GitHub:
     - icon: /icons/github.png
-      href: "{{ homepage.bookmark_urls.github }}"
+      href: "{{ urls.github }}"
       description: ''
   - Google Drive:
     - icon: /icons/gdrive.png
-      href: "{{ homepage.bookmark_urls.gdrive }}"
+      href: "{{ urls.gdrive }}"
       description: ''
   - Gmail:
     - icon: /icons/gmail.png
-      href: "{{ homepage.bookmark_urls.gmail }}"
+      href: "{{ urls.gmail }}"
       description: ''
   - Router:
     - icon: mdi-router-wireless-#ffffff
-      href: "{{ homepage.bookmark_urls.router_ui }}"
+      href: "{{ urls.router_ui }}"
       description: ''
   - Docker Hub:
     - icon: /icons/dockerhub.png

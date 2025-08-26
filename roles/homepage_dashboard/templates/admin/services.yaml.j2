@@ -20,24 +20,10 @@
             url: http://glances:{{ glances_port }}
             metric: network:eth0
             chart: false
-    - SYST:
+    - SSD:
         widget:
             type: glances
             version: 4
             url: http://glances:{{ glances_port }}
             metric: disk:{{ drives.system.device }}
-            chart: false
-    - DATA:
-        widget:
-            type: glances
-            version: 4
-            url: http://glances:{{ glances_port }}
-            metric: disk:{{ drives.additional | selectattr('id', 'equalto', 'storage') | map(attribute='device') | first }}
-            chart: false            
-    - MEDIA:
-        widget:
-            type: glances
-            version: 4
-            url: http://glances:{{ glances_port }}
-            metric: disk:{{ drives.additional | selectattr('id', 'equalto', 'media') | map(attribute='device') | first }}
             chart: false

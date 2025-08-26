@@ -1,0 +1,17 @@
+- search:
+    provider: google
+    target: _blank
+
+- datetime:
+    text_size: sm
+    format:
+      timeStyle: short
+      dateStyle: medium
+      hourCycle: h23
+
+- openweathermap:
+    latitude: {{ open_weather_map.latitude }}
+    longitude: {{ open_weather_map.longitude }}
+    provider: openweathermap
+    units: metric
+    cache: 5

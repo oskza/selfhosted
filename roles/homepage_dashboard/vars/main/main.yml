@@ -1,19 +1,25 @@
 open_weather_map:
-  latitude: "{{ vault_latitude }}"
-  longitude: "{{ vault_longitude }}"
+  latitude: "{{ vault_open_weather_map_latitude }}"
+  longitude: "{{ vault_open_weather_map_longitude }}"
   api_key: "{{ vault_open_weather_map_api_key }}"
 
 glances_port: "{{ vault_glances_port }}"
 
 homepage:
   version: v1.4
+  icon_color: d4d4d4
   instances:
     - name: admin
       host: "{{ vault_admin_instance_host }}"
       port: "{{ vault_admin_instance_port }}"
-  icon_color: d4d4d4
-  bookmark_urls:
-    github: "{{ vault_github_url }}"
-    gdrive: "{{ vault_gdrive_url }}"
-    gmail: "{{ vault_gmail_url }}"
-    router_ui: "{{ vault_router_ui_url }}"
+      bookmark_urls:
+        gdrive: "{{ vault_admin_gdrive_url }}"
+        gmail: "{{ vault_admin_gmail_url }}"
+        github: "{{ vault_github_repo_url }}"
+        router_ui: "{{ vault_router_ui_url }}"
+    - name: public
+      host: "{{ vault_public_instance_host }}"
+      port: "{{ vault_public_instance_port }}"
+      bookmark_urls:
+        gdrive: "{{ vault_public_gdrive_url }}"
+        gmail: "{{ vault_public_gmail_url }}"

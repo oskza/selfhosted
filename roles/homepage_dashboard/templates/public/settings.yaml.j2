@@ -1,0 +1,33 @@
+title: Public
+instanceName: public
+language: en
+hideVersion: true
+target: _blank
+
+theme: dark
+color: neutral
+headerStyle: clean
+useEqualHeights: true
+
+cardBlur: ""
+background: 
+    image: /images/background.png
+    opacity: 40
+
+quicklaunch:
+    searchDescriptions: true
+
+providers:
+    openweathermap: {{ open_weather_map.api_key }}
+
+layout:
+    System:
+        icon: mdi-cog-#{{ homepage.icon_color }}
+    Media:
+        icon: mdi-play-#{{ homepage.icon_color }}
+    Utils:
+        icon: mdi-tools-#{{ homepage.icon_color }}
+    Bookmarks:
+        icon: mdi-bookmark-#{{ homepage.icon_color }}
+        style: row
+        columns: 4
