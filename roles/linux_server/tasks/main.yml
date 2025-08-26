@@ -34,8 +34,10 @@
 - name: set env variables for defined directories
   ansible.builtin.lineinfile:
     path: /etc/environment
+    regexp: "^{{ dir.key | upper }}_DIR="
     line: "{{ dir.key | upper }}_DIR={{ dir.value }}"
     state: present
+    create: yes
   loop: "{{ directories | dict2items }}"
   loop_control:
     loop_var: dir
