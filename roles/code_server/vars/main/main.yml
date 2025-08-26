@@ -5,21 +5,10 @@ code_server:
   password: "{{ vault_code_password }}"
   sudo_password: "{{ vault_code_sudo_password }}"
   docker_gid: "{{ vault_docker_guid }}"
+  home: /config
+  workspace:
+    src: "{{ directories.storage }}/workspace"
+    dest: /workspace
   git:
     username: "{{ vault_code_git_username }}"
     email: "{{ vault_code_git_email }}"
-  dirs:
-    home: /config
-    workspaces:
-      - id: default_workspace
-        src: "{{ directories.workspace }}"
-        dest: /workspace
-      - id: services
-        src: "{{ directories.home }}/services"
-        dest: /services
-  homepage:
-    title: VS Code
-    description: Code Server
-    icon: /icons/vscode.png
-    group: Utils
-    order: 1

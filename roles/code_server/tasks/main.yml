@@ -1,10 +1,23 @@
-- name: setup code-server directory
+- name: setup code-server service and workspace directories
   ansible.builtin.file:
-    path: "{{ directories.services }}/code-server"
+    path: "{{ path }}"
     state: directory
     owner: "{{ main_user.name }}"
     group: "{{ main_user.name }}"
     mode: 0755
+  loop:
+    - "{{ directories.services }}/code-server"
+    - "{{ directories.storage }}/workspace"
+  loop_control:
+    loop_var: path
+
+- name: set env variable for workspace directory
+  ansible.builtin.lineinfile:
+    path: /etc/environment
+    regexp: '^WORKSPACE_DIR='
+    line: "WORKSPACE_DIR={{ directories.storage }}/workspace"
+    state: present
+    create: yes
 
 - name: deploy code-server from template files
   ansible.builtin.template:

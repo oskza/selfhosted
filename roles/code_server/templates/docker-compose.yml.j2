@@ -7,10 +7,8 @@ services:
     restart: unless-stopped
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - data:{{ code_server.dirs.home }}
-{% for workspace in code_server.dirs.workspaces %}
-      - {{ workspace.src }}:{{ workspace.dest }}
-{% endfor %}
+      - data:{{ code_server.home }}
+      - {{ code_server.workspace.src }}:{{ code_server.workspace.dest }}
     environment:
       TZ: {{ timezone }}
       PUID: {{ main_user.uid }}
@@ -19,20 +17,20 @@ services:
       SUDO_PASSWORD: {{ code_server.sudo_password }}
       PROXY_DOMAIN: {{ code_server.host }}
       PORT: {{ code_server.port }}
-      HOME: {{ code_server.dirs.home }}
-      DEFAULT_WORKSPACE: {{ code_server.dirs.workspaces | selectattr('id', 'equalto', 'default_workspace') | map(attribute='dest') | first }}
+      HOME: {{ code_server.home }}
+      DEFAULT_WORKSPACE: {{ code_server.workspace.dest }}
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.code-server.rule=Host(`{{ code_server.host }}`)"
       - "traefik.http.routers.code-server.entrypoints=https"
       - "traefik.http.routers.code-server.tls=true"
       - "traefik.http.services.code-server.loadbalancer.server.port={{ code_server.port }}"
-      - "homepage.instance.admin.name={{ code_server.homepage.title }}"
-      - "homepage.instance.admin.description={{ code_server.homepage.description }}"
-      - "homepage.instance.admin.icon={{ code_server.homepage.icon }}"
-      - "homepage.instance.admin.group={{ code_server.homepage.group }}"
-      - "homepage.instance.admin.href=https://{{ code_server.host }}"
-      - "homepage.instance.admin.weight={{ code_server.homepage.order }}"
+      - "homepage.name=VS Code"
+      - "homepage.description=Code Server"
+      - "homepage.icon=/icons/vscode.png"
+      - "homepage.href=https://{{ code_server.host }}"
+      - "homepage.group=Utils"
+      - "homepage.weight=1"
 networks:
   default:
     name: proxy_net

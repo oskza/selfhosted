@@ -1,7 +1,7 @@
 FROM linuxserver/code-server:{{ code_server.version }}
 
 # Create SSH keys & Git Config
-RUN mkdir -p {{ code_server.dirs.home }}/.ssh && [ -f {{ code_server.dirs.home }}/.ssh/id_rsa ] || ssh-keygen -t rsa -f {{ code_server.dirs.home }}/.ssh/id_rsa -N "" && \
+RUN mkdir -p {{ code_server.home }}/.ssh && [ -f {{ code_server.home }}/.ssh/id_rsa ] || ssh-keygen -t rsa -f {{ code_server.home }}/.ssh/id_rsa -N "" && \
     git config --file /config/.gitconfig user.email {{ code_server.git.email }} && \
     git config --file /config/.gitconfig user.name {{ code_server.git.username }} && \
     git config --file /config/.gitconfig init.defaultBranch main
