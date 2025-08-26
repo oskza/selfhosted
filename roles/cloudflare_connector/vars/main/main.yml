@@ -1,14 +1,8 @@
 cloudflared:
   version: 2025.8.0
   account_id: "{{ vault_account_id }}"
+  url: https://dash.cloudflare.com
+  homepage_token: "{{ vault_homepage_token }}"
   tunnel:
     id: "{{ vault_tunnel_id }}"
     token: "{{ vault_tunnel_token }}"
-  homepage:
-    title: Cloudflared
-    description: Cloudflare Tunnel
-    icon: /icons/cloudflare.png
-    group: System
-    order: 3
-    url: https://dash.cloudflare.com
-    token: "{{ vault_homepage_token }}"

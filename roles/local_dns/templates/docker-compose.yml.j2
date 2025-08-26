@@ -24,16 +24,16 @@ services:
       - "traefik.http.routers.pihole.entrypoints=https"
       - "traefik.http.routers.pihole.tls=true"
       - "traefik.http.services.pihole.loadbalancer.server.port=80"
-      - "homepage.instance.admin.name={{ pihole.homepage.title }}"
-      - "homepage.instance.admin.description={{ pihole.homepage.description }}"
-      - "homepage.instance.admin.icon={{ pihole.homepage.icon }}"
-      - "homepage.instance.admin.group={{ pihole.homepage.group }}"
-      - "homepage.instance.admin.weight={{ pihole.homepage.order }}"
+      - "homepage.instance.admin.name=PiHole"
+      - "homepage.instance.admin.description=Local DNS & Ad Blocker"
+      - "homepage.instance.admin.icon=/icons/pihole.png"
       - "homepage.instance.admin.href=https://{{ pihole.host }}/admin"
+      - "homepage.instance.admin.group=System"
+      - "homepage.instance.admin.weight=4"
       - "homepage.instance.admin.widget.type=pihole"
       - "homepage.instance.admin.widget.version=6"
       - "homepage.instance.admin.widget.url=http://pihole"
-      - "homepage.instance.admin.widget.key={{ pihole.homepage.key }}"
+      - "homepage.instance.admin.widget.key={{ pihole.app_pass }}"
 networks:
   proxy_net:
     external: true

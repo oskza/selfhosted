@@ -10,14 +10,14 @@ services:
       DISPLAY_TIMEZONE: {{ timezone }}
       PUID: {{ main_user.uid }}
       PGID: {{ main_user.gid }}
-      APP_NAME: {{ speedtest.app.name }}
-      APP_KEY: {{ speedtest.app.key }}
+      APP_NAME: 'Speedtest Tracker'
+      APP_KEY: {{ speedtest.app_key }}
       APP_URL: "https://{{ speedtest.host }}"
-      DB_CONNECTION: {{ speedtest.db }}
-      PUBLIC_DASHBOARD: {{ speedtest.dashboard | default(false) }}
+      DB_CONNECTION: sqlite
+      PUBLIC_DASHBOARD: true
       SPEEDTEST_SERVERS: {{ speedtest.servers }}
-      SPEEDTEST_SCHEDULE: {{ speedtest.schedule }}
-      PRUNE_RESULTS_OLDER_THAN: {{ speedtest.prune_days | default(0) }}
+      SPEEDTEST_SCHEDULE: "6 */2 * * *"
+      PRUNE_RESULTS_OLDER_THAN: 30
 {% if speedtest.admin is defined %}      
       ADMIN_NAME: {{ speedtest.admin.name | default('Admin') }}
       ADMIN_EMAIL: {{ speedtest.admin.email }}
@@ -29,15 +29,15 @@ services:
       - "traefik.http.routers.speedtest.entrypoints=https"
       - "traefik.http.routers.speedtest.tls=true"
       - "traefik.http.services.speedtest.loadbalancer.server.port={{ speedtest.port }}"
-      - "homepage.instance.admin.name={{ speedtest.homepage.title }}"
-      - "homepage.instance.admin.description={{ speedtest.homepage.description }}"
-      - "homepage.instance.admin.icon={{ speedtest.homepage.icon }}"
-      - "homepage.instance.admin.group={{ speedtest.homepage.group }}"
-      - "homepage.instance.admin.weight={{ speedtest.homepage.order }}"
-      - "homepage.instance.admin.href=https://{{ speedtest.host }}"
-      - "homepage.instance.admin.widget.type=speedtest"
-      - "homepage.instance.admin.widget.url=http://speedtest-tracker"
-      - "homepage.instance.admin.widget.bitratePrecision={{ speedtest.homepage.bitratePrecision }}"
+      - "homepage.name=Speedtest"
+      - "homepage.description=Speed Test Tracker"
+      - "homepage.icon=/icons/speedtest.png"
+      - "homepage.href=https://{{ speedtest.host }}"
+      - "homepage.widget.type=speedtest"
+      - "homepage.widget.url=http://speedtest-tracker"
+      - "homepage.widget.bitratePrecision=0"
+      - "homepage.group=System"
+      - "homepage.weight=1"
 networks:
   default:
     name: proxy_net

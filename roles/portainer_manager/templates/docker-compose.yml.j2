@@ -14,16 +14,16 @@ services:
       - "traefik.http.routers.portainer.entrypoints=https"
       - "traefik.http.routers.portainer.tls=true"
       - "traefik.http.services.portainer.loadbalancer.server.port={{ portainer.port }}"
-      - "homepage.instance.admin.name={{ portainer.homepage.title }}"
-      - "homepage.instance.admin.description={{ portainer.homepage.description }}"
-      - "homepage.instance.admin.icon={{ portainer.homepage.icon }}"
-      - "homepage.instance.admin.group={{ portainer.homepage.group }}"
-      - "homepage.instance.admin.weight={{ portainer.homepage.order }}"
+      - "homepage.instance.admin.name=Portainer"
+      - "homepage.instance.admin.description=Docker Manager"
+      - "homepage.instance.admin.icon=/icons/portainer.png"
       - "homepage.instance.admin.href=https://{{ portainer.host }}"
+      - "homepage.instance.admin.group=System"
+      - "homepage.instance.admin.weight=2"
       - "homepage.instance.admin.widget.type=portainer"
       - "homepage.instance.admin.widget.url=http://portainer:{{ portainer.port }}"
-      - "homepage.instance.admin.widget.env={{ portainer.homepage.env }}"
-      - "homepage.instance.admin.widget.key={{ portainer.homepage.token }}"
+      - "homepage.instance.admin.widget.env={{ portainer.env }}"
+      - "homepage.instance.admin.widget.key={{ portainer.homepage_token }}"
 networks:
   default:
     name: proxy_net

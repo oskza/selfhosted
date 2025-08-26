@@ -11,10 +11,10 @@ media_services:
       title: Plex
       description: Media Server
       icon: /icons/plex.png
+      key: "{{ vault_plex_auth_token }}"
+      fields: ["streams", "movies", "tv"]
       group: Media
       order: 1
-      fields: ["streams", "movies", "tv"]
-      key: "{{ vault_plex_auth_token }}"
   - name: qbittorrent
     version: release-5.1.2
     host: "{{ vault_qbittorrent_host }}"
@@ -23,10 +23,10 @@ media_services:
       title: qBittorrent
       description: Torrent Client
       icon: /icons/qbittorrent.png
-      group: Download
-      order: 1
       username: "{{ vault_qbittorrent_username }}"
       password: "{{ vault_qbittorrent_password }}"
+      group: Download
+      order: 1
   - name: radarr
     version: nightly-5.27.4.10154
     host: "{{ vault_radarr_host }}"
@@ -35,9 +35,10 @@ media_services:
       title: Radarr
       description: Movies Manager
       icon: /icons/radarr.png
+      key: "{{ vault_radarr_api_key }}"
+      public: true
       group: Media
       order: 2
-      key: "{{ vault_radarr_api_key }}"
   - name: sonarr
     version: release-4.0.15.2941
     host: "{{ vault_sonarr_host }}"
@@ -46,9 +47,10 @@ media_services:
       title: Sonarr
       description: TV Manager
       icon: /icons/sonarr.png
+      key: "{{ vault_sonarr_api_key }}"
+      public: true
       group: Media
       order: 3
-      key: "{{ vault_sonarr_api_key }}"
   - name: bazarr
     version: nightly-873b444
     host: "{{ vault_bazarr_host }}"
@@ -57,9 +59,9 @@ media_services:
       title: Bazarr
       description: Subtitles Manager
       icon: /icons/bazarr.png
+      key: "{{ vault_bazarr_api_key }}"
       group: Media
       order: 4
-      key: "{{ vault_bazarr_api_key }}"
   - name: prowlarr
     version: release-1.37.0.5076
     host: "{{ vault_prowlarr_host }}"
@@ -68,6 +70,6 @@ media_services:
       title: Prowlarr
       description: Indexer Manager
       icon: /icons/prowlarr.png
+      key: "{{ vault_prowlarr_api_key }}"
       group: Download
       order: 2
-      key: "{{ vault_prowlarr_api_key }}"

@@ -6,13 +6,7 @@ pihole:
   version: 2025.03.0
   host: "{{ vault_pihole_host }}"
   password: "{{ vault_pihole_password }}"
-  homepage:
-    title: PiHole
-    description: Local DNS & Ad Blocker
-    icon: /icons/pihole.png
-    group: System
-    order: 4
-    key: "{{ vault_pihole_app_pass }}"
+  app_pass: "{{ vault_pihole_app_pass }}"
   dns_records:
     - "{{ ansible_host }} {{ proxy_local_hostname }}"
     - "{{ vault_router_ip }} {{ vault_router_local_hostname }}"

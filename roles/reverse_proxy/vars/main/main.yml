@@ -16,9 +16,3 @@ traefik:
     hashed: "{{ vault_traefik_dashboard_hashed }}"
     username: "{{ vault_traefik_dashboard_username }}"
     password: "{{ vault_traefik_dashboard_password }}"
-  homepage:
-    title: Traefik
-    description: Reverse Proxy
-    icon: /icons/traefik.png
-    group: System
-    order: 5

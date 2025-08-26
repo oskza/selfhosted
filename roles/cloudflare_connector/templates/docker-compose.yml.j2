@@ -7,16 +7,16 @@ services:
     environment:
       TUNNEL_TOKEN: {{ cloudflared.tunnel.token }}
     labels:
-      - "homepage.instance.admin.name={{ cloudflared.homepage.title }}"
-      - "homepage.instance.admin.description={{ cloudflared.homepage.description }}"
-      - "homepage.instance.admin.group={{ cloudflared.homepage.group }}"
-      - "homepage.instance.admin.icon={{ cloudflared.homepage.icon }}"
-      - "homepage.instance.admin.href={{ cloudflared.homepage.url }}"
-      - "homepage.instance.admin.weight={{ cloudflared.homepage.order }}"
+      - "homepage.instance.admin.name=Cloudflared"
+      - "homepage.instance.admin.description=Cloudflare Tunnel"
+      - "homepage.instance.admin.icon=/icons/cloudflare.png"
+      - "homepage.instance.admin.href={{ cloudflared.url }}"
+      - "homepage.instance.admin.group=System"
+      - "homepage.instance.admin.weight=3"
       - "homepage.instance.admin.widget.type=cloudflared"
       - "homepage.instance.admin.widget.accountid={{ cloudflared.account_id }}"
       - "homepage.instance.admin.widget.tunnelid={{ cloudflared.tunnel.id }}"
-      - "homepage.instance.admin.widget.key={{ cloudflared.homepage.token }}"
+      - "homepage.instance.admin.widget.key={{ cloudflared.homepage_token }}"
 networks:
   default:
     name: tunnel_net
