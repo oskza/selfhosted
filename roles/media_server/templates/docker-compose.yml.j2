@@ -8,9 +8,13 @@ services:
     restart: unless-stopped
     logging:
       driver: json-file
+{% if service.route_via_vpn | default(false) %}
+    network_mode: "container:gluetun"
+{% else %}
     networks:
       - media_net
       - proxy_net
+{% endif %}
 {% if service.name == 'plex' %}
     ports:
       - {{ service.port }}:{{ service.port }}
@@ -57,7 +61,7 @@ services:
       - "{{ homepage_label_prefix }}.group={{ service.homepage.group }}"
       - "{{ homepage_label_prefix }}.weight={{ service.homepage.order | default(0) }}"
       - "{{ homepage_label_prefix }}.widget.type={{ service.name }}"
-      - "{{ homepage_label_prefix }}.widget.url=http://{{ service.name }}:{{ service.port }}"
+      - "{{ homepage_label_prefix }}.widget.url=http://{{ 'gluetun' if service.route_via_vpn|default(false) else service.name }}:{{ service.port }}"
 {% if service.homepage.fields is defined and service.homepage.fields | length > 0 %}
       - "{{ homepage_label_prefix }}.widget.fields={{ service.homepage.fields | to_json | regex_replace('"', '\\"')}}"
 {% endif %}

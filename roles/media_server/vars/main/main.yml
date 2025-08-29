@@ -19,6 +19,7 @@ media_services:
     version: release-5.1.2
     host: "{{ vault_qbittorrent_host }}"
     port: "{{ vault_qbittorrent_port }}"
+    route_via_vpn: true
     homepage:
       title: qBittorrent
       description: Torrent Client

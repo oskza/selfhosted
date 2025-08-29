@@ -1,0 +1,27 @@
+services:
+  gluetun:
+    image: qmcgaw/gluetun:{{ gluetun.version }}
+    container_name: gluetun
+    restart: unless-stopped
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    volumes:
+      - data:/gluetun
+    environment:
+      TZ: {{ timezone }}
+      PUID: {{ main_user.uid }}
+      PGID: {{ main_user.gid }}
+      VPN_TYPE: wireguard
+      VPN_SERVICE_PROVIDER: {{ gluetun.provider }}
+      WIREGUARD_PRIVATE_KEY: {{ gluetun.private_key }}
+      SERVER_COUNTRIES: {{ gluetun.countries }}
+      UPDATER_PERIOD: 24h
+networks:
+  default:
+    name: proxy_net
+    external: true   
+volumes:
+  data:
+    name: gluetun_data
