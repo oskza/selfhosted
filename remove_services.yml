@@ -8,6 +8,7 @@
         tasks_from: cleanup.yml
       loop:
         - media_server
+        - vpn_client
         - password_manager
         - speedtest_tracker
         - code_server
