@@ -1,0 +1,35 @@
+- name: set env variable for backup directory
+  ansible.builtin.lineinfile:
+    path: /etc/environment
+    regexp: '^BACKUP_DIR='
+    line: "BACKUP_DIR={{ directories.storage }}/backup"
+    state: present
+    create: yes
+
+- name: setup backup volumes directory
+  ansible.builtin.file:
+    path: "{{ directories.storage }}/backup/volumes"
+    state: directory
+    owner: "{{ main_user.name }}"
+    group: "{{ main_user.name }}"
+    mode: 0755
+
+- name: copy exec scripts to bin directory
+  ansible.builtin.copy:
+    src: scripts/
+    dest: "{{ directories.scripts }}/"
+    owner: "{{ main_user.name }}"
+    group: "{{ main_user.name }}"
+    mode: 0755
+
+- name: copy helper files (non-exec) to shared directory
+  ansible.builtin.copy:
+    src: shared/
+    dest: "{{ directories.scripts }}/shared/"
+    owner: "{{ main_user.name }}"
+    group: "{{ main_user.name }}"
+    mode: 0644
+
+- name: pull an alpine image
+  community.docker.docker_image_pull:
+    name: alpine

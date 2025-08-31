@@ -1,0 +1,3 @@
+homepage_*_data
+traefik_data
+gluetun_data

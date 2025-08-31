@@ -1,0 +1,22 @@
+- name: remove scripts and helper files
+  ansible.builtin.file:
+    path: "{{ directories.scripts }}/{{ rel_path }}"
+    state: absent
+  loop:
+    - docker_volumes_backup.sh
+    - docker_volumes_restore.sh
+    - shared/docker_helpers.sh
+    - shared/exclude_volumes.txt
+  loop_control:
+    loop_var: rel_path
+
+- name: remove backup dir env var
+  ansible.builtin.lineinfile:
+    path: /etc/environment
+    regexp: '^BACKUP_DIR='
+    state: absent
+
+- name: remove alpine image
+  community.docker.docker_image:
+    name: alpine
+    state: absent
