@@ -55,6 +55,21 @@
   loop_control:
     loop_var: filename
 
+- name: ensure scripts shared directory exists
+  ansible.builtin.file:
+    path: "{{ directories.scripts }}/shared"
+    state: directory
+    owner: "{{ main_user.name }}"
+    group: "{{ main_user.name }}"
+    mode: 0755
+
+- name: ensure scripts directory is in PATH
+  ansible.builtin.lineinfile:
+    path: "{{ directories.home }}/.bashrc"
+    line: "export PATH={{ directories.scripts }}:$PATH"
+    insertafter: EOF
+    state: present
+
 - name: install needed packages
   ansible.builtin.package:
     name: "{{ pkg }}"
