@@ -6,8 +6,6 @@ services:
     image: ghcr.io/hotio/{{ service.name }}:{{ service.version }}
     container_name: {{ service.name }}
     restart: unless-stopped
-    logging:
-      driver: json-file
 {% if service.route_via_vpn | default(false) %}
     network_mode: "container:gluetun"
 {% else %}
@@ -82,7 +80,7 @@ networks:
 volumes:
 {% for service in media_services %}
   {{ service.name }}_data:
-    name: "{{ service.name }}_data"
+    name: {{ service.name }}_data
 {% endfor %}
 {% if 'plex' in (media_services | map(attribute='name')) %}
   plex_transcode:
