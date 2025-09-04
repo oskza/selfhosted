@@ -1,6 +1,30 @@
 - name: install docker
   ansible.builtin.include_tasks: install_docker.yml
 
+- name: create docker daemon configuration
+  ansible.builtin.copy:
+    dest: /etc/docker/daemon.json
+    content: |
+      {
+        "dns": ["{{ ansible_host }}", "{{ dns_resolver_1 }}", "{{ dns_resolver_2 }}"],
+        "log-driver": "local",
+        "log-opts": {
+          "max-size": "10m",
+          "max-file": "3",
+          "compress": "true"
+        }
+      }
+    owner: root
+    group: root
+    mode: 0644
+  register: docker_config
+
+- name: restart docker
+  ansible.builtin.service:
+    name: docker
+    state: restarted
+  when: docker_config.changed
+
 - name: create docker external networks
   community.general.docker_network:
     name: "{{ net.name }}"

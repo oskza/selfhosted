@@ -28,21 +28,3 @@
     - update_dns_records.yml
   loop_control:
     loop_var: file
-
-- name: create docker daemon file with dns property
-  copy:
-    dest: /etc/docker/daemon.json
-    content: |
-      {
-        "dns": ["{{ ansible_host }}", "{{ dns_resolver_1 }}", "{{ dns_resolver_2 }}"]
-      }
-    owner: root
-    group: root
-    mode: 0644
-  register: docker_config
-
-- name: restart docker
-  service:
-    name: docker
-    state: restarted
-  when: docker_config.changed
