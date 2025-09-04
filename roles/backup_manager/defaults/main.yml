@@ -1,0 +1,3 @@
+docker_backup:
+  time: "*-*-* 04:30:00"
+  timeout: 3600

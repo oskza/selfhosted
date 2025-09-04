@@ -14,8 +14,8 @@
   remote_user: "{{ ansible_username }}"
   roles:
     - linux_server
-    - docker_host
     - backup_manager
+    - docker_host
     - local_dns
     - reverse_proxy
     - portainer_manager

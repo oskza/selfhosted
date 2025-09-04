@@ -1,0 +1,9 @@
+[Unit]
+Description=Run Docker volumes backup nightly
+
+[Timer]
+OnCalendar={{ docker_backup.time }}
+Persistent=true
+
+[Install]
+WantedBy=timers.target

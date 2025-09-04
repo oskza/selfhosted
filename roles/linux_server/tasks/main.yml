@@ -42,6 +42,14 @@
   loop_control:
     loop_var: dir
 
+- name: ensure scripts shared directory exists
+  ansible.builtin.file:
+    path: "{{ directories.scripts }}/shared"
+    state: directory
+    owner: "{{ main_user.name }}"
+    group: "{{ main_user.name }}"
+    mode: 0755
+
 - name: copy bashrc and bash_aliases files
   ansible.builtin.copy:
     src: "{{ filename }}"
@@ -54,21 +62,6 @@
     - bash_aliases
   loop_control:
     loop_var: filename
-
-- name: ensure scripts shared directory exists
-  ansible.builtin.file:
-    path: "{{ directories.scripts }}/shared"
-    state: directory
-    owner: "{{ main_user.name }}"
-    group: "{{ main_user.name }}"
-    mode: 0755
-
-- name: ensure scripts directory is in PATH
-  ansible.builtin.lineinfile:
-    path: "{{ directories.home }}/.bashrc"
-    line: "export PATH={{ directories.scripts }}:$PATH"
-    insertafter: EOF
-    state: present
 
 - name: install needed packages
   ansible.builtin.package:

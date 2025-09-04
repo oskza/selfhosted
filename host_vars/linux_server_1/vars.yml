@@ -41,7 +41,8 @@ drives:
 directories:
   home: "/home/{{ main_user.name }}"
   services: "/home/{{ main_user.name }}/services"
-  scripts: "/home/{{ main_user.name }}/.local/bin"
+  scripts: "/usr/local/bin"
   storage: "{{ drives.additional | selectattr('id', 'equalto', 'storage') | map(attribute='mount_point') | first }}/data"
+  backup: "{{ drives.additional | selectattr('id', 'equalto', 'storage') | map(attribute='mount_point') | first }}/data/backup"
   media_1: "{{ drives.additional | selectattr('id', 'equalto', 'media_1') | map(attribute='mount_point') | first }}/data_1"
   media_2: "{{ drives.additional | selectattr('id', 'equalto', 'media_2') | map(attribute='mount_point') | first }}/data_2"

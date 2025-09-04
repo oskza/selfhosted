@@ -1,14 +1,6 @@
-- name: set env variable for backup directory
-  ansible.builtin.lineinfile:
-    path: /etc/environment
-    regexp: '^BACKUP_DIR='
-    line: "BACKUP_DIR={{ directories.storage }}/backup"
-    state: present
-    create: yes
-
-- name: setup backup volumes directory
+- name: ensure volumes backup directory exists
   ansible.builtin.file:
-    path: "{{ directories.storage }}/backup/volumes"
+    path: "{{ directories.backup }}/volumes"
     state: directory
     owner: "{{ main_user.name }}"
     group: "{{ main_user.name }}"
@@ -22,7 +14,7 @@
     group: "{{ main_user.name }}"
     mode: 0755
 
-- name: copy helper files (non-exec) to shared directory
+- name: copy helper files (non-exec) to scripts/shared directory
   ansible.builtin.copy:
     src: shared/
     dest: "{{ directories.scripts }}/shared/"
@@ -33,3 +25,27 @@
 - name: pull an alpine image
   community.docker.docker_image_pull:
     name: alpine
+
+- name: deploy docker backup service
+  ansible.builtin.template:
+    src: docker-backup.service.j2
+    dest: /etc/systemd/system/docker-backup.service
+    owner: root
+    group: root
+    mode: 0644
+  notify: reload_systemd
+
+- name: deploy docker backup timer
+  ansible.builtin.template:
+    src: docker-backup.timer.j2
+    dest: /etc/systemd/system/docker-backup.timer
+    owner: root
+    group: root
+    mode: 0644
+  notify: reload_systemd
+
+- name: enable and start docker backup timer
+  systemd:
+    name: docker-backup.timer
+    enabled: yes
+    state: started
