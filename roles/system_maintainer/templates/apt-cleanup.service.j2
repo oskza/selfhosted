@@ -1,0 +1,6 @@
+[Unit]
+Description=APT autoremove/autoclean
+
+[Service]
+Type=oneshot
+ExecStart={{ directories.scripts }}/apt_cleanup.sh

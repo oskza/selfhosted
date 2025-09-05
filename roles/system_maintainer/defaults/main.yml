@@ -1,0 +1,5 @@
+journald_max_use: 1G
+journald_max_retention: 30day
+
+tmp_retention: 10d
+var_temp_retention: 30d

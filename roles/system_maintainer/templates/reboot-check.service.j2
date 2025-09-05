@@ -1,0 +1,7 @@
+[Unit]
+Description=Reboot server if /var/run/reboot-required exists
+ConditionPathExists=/var/run/reboot-required
+
+[Service]
+Type=oneshot
+ExecStart=/sbin/reboot

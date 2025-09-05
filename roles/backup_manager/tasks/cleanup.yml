@@ -3,37 +3,31 @@
     name: docker-backup.timer
     enabled: no
     state: stopped
+  ignore_errors: true
 
 - name: stop docker backup service
   systemd:
     name: docker-backup.service
     state: stopped
+  ignore_errors: true
 
-- name: remove docker backup service file
+- name: remove docker backup files
   ansible.builtin.file:
-    path: /etc/systemd/system/docker-backup.service
+    path: "{{ path }}"
     state: absent
-
-- name: remove docker backup timer file
-  ansible.builtin.file:
-    path: /etc/systemd/system/docker-backup.timer
-    state: absent
+  loop:
+    - /etc/systemd/system/docker-backup.timer
+    - /etc/systemd/system/docker-backup.service
+    - /etc/docker-backup.conf
+    - "{{ directories.scripts }}/docker_volumes_backup.sh"
+    - "{{ directories.scripts }}/docker_volumes_restore.sh"
+    - "{{ directories.scripts }}/shared/docker_helpers.sh"
+  loop_control:
+    loop_var: path
 
 - name: reload systemd daemon
   systemd:
     daemon_reload: yes
-
-- name: remove scripts and helper files
-  ansible.builtin.file:
-    path: "{{ directories.scripts }}/{{ rel_path }}"
-    state: absent
-  loop:
-    - docker_volumes_backup.sh
-    - docker_volumes_restore.sh
-    - shared/docker_helpers.sh
-    - shared/exclude_volumes.txt
-  loop_control:
-    loop_var: rel_path
 
 - name: remove alpine image
   community.docker.docker_image:

@@ -15,6 +15,7 @@
   roles:
     - linux_server
     - backup_manager
+    - system_maintainer
     - docker_host
     - local_dns
     - reverse_proxy

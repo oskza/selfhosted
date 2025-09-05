@@ -1,0 +1,23 @@
+- name: Deploy reboot-check service
+  ansible.builtin.template:
+    src: reboot-check.service.j2
+    dest: /etc/systemd/system/reboot-check.service
+    owner: root
+    group: root
+    mode: 0644
+  notify: reload_systemd
+
+- name: Deploy reboot-check timer
+  ansible.builtin.template:
+    src: reboot-check.timer.j2
+    dest: /etc/systemd/system/reboot-check.timer
+    owner: root
+    group: root
+    mode: 0644
+  notify: reload_systemd
+
+- name: Enable and start reboot-check timer
+  ansible.builtin.systemd:
+    name: reboot-check.timer
+    enabled: yes
+    state: started

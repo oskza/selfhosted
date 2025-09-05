@@ -1,0 +1,6 @@
+[Unit]
+Description=Docker cleanup (images, networks)
+
+[Service]
+Type=oneshot
+ExecStart={{ directories.scripts }}/docker_cleanup.sh

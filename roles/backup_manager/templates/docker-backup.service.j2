@@ -7,6 +7,5 @@ After=docker.service
 Type=oneshot
 User={{ main_user.name }}
 Group={{ main_user.name }}
-Environment=BACKUP_DIR={{ directories.backup }}
 ExecStart={{ directories.scripts }}/docker_volumes_backup.sh
-TimeoutStartSec={{ docker_backup.timeout }}
+TimeoutStartSec={{ backup_service_timeout }}

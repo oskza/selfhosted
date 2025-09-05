@@ -1,3 +1,12 @@
-docker_backup:
-  time: "*-*-* 04:30:00"
-  timeout: 3600
+backup_volumes_dir: "{{ directories.backup }}/volumes"
+
+retention_days: 14
+
+backup_time: "*-*-* 04:30:00"
+
+backup_service_timeout: 3600
+
+exclude_volumes:
+  - homepage_*_data
+  - traefik_data
+  - gluetun_data

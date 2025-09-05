@@ -1,0 +1,8 @@
+- name: setup unattended upgrades
+  ansible.builtin.import_tasks: updates.yml
+
+- name: setup cleanup jobs
+  ansible.builtin.import_tasks: cleanup.yml
+
+- name: setup automatic reboot strategy
+  ansible.builtin.import_tasks: reboot.yml
