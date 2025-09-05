@@ -1,0 +1,6 @@
+[Unit]
+Description=Weekly APT full upgrade
+
+[Service]
+Type=oneshot
+ExecStart={{ directories.scripts }}/apt_full_upgrade.sh

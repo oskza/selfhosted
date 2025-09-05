@@ -2,7 +2,7 @@
 Description=Run Docker cleanup weekly
 
 [Timer]
-OnCalendar=Sun *-*-* 04:00:00
+OnCalendar={{ docker_cleanup_schedule }}
 Persistent=true
 
 [Install]

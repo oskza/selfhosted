@@ -1,0 +1,9 @@
+[Unit]
+Description=Run APT upgrade periodically
+
+[Timer]
+OnCalendar={{ apt_upgrade_schedule }}
+Persistent=true
+
+[Install]
+WantedBy=timers.target

@@ -1,8 +1,79 @@
-- name: setup unattended upgrades
-  ansible.builtin.import_tasks: updates.yml
+- name: install unattended-upgrades and needrestart
+  ansible.builtin.apt:
+    name:
+      - unattended-upgrades
+      - needrestart
+    state: present
+    update_cache: yes
 
-- name: setup cleanup jobs
-  ansible.builtin.import_tasks: cleanup.yml
+- name: deploy unattended-upgrades config
+  ansible.builtin.template:
+    src: 52unattended-upgrades-local.j2
+    dest: /etc/apt/apt.conf.d/52unattended-upgrades-local
+    owner: root
+    group: root
+    mode: 0644
 
-- name: setup automatic reboot strategy
-  ansible.builtin.import_tasks: reboot.yml
+- name: configure journald limits
+  ansible.builtin.lineinfile:
+    path: /etc/systemd/journald.conf
+    regexp: "^#?{{ prop.key }}="
+    line: "{{ prop.key }}={{ prop.value }}"
+  loop:
+    - { key: 'SystemMaxUse', value: '{{ journald_max_size }}' }
+    - { key: 'MaxRetentionSec', value: '{{ journald_retention_period }}' }
+  loop_control:
+    loop_var: prop
+    label: "{{ prop.key }}"
+  notify: restart_journald
+
+- name: configure tmpfiles cleanup policy
+  ansible.builtin.copy:
+    dest: /etc/tmpfiles.d/tmp.conf
+    content: |
+      d /tmp 1777 root root {{ tmp_retention_period }}
+      d /var/tmp 1777 root root {{ var_temp_retention_period }}
+    owner: root
+    group: root
+    mode: 0644
+
+- name: copy script files
+  ansible.builtin.copy:
+    src: scripts/
+    dest: "{{ directories.scripts }}/"
+    owner: "{{ main_user.name }}"
+    group: "{{ main_user.name }}"
+    mode: 0755
+
+- name: deploy services and timers
+  ansible.builtin.template:
+    src: "{{ filename }}.j2"
+    dest: "/etc/systemd/system/{{ filename }}"
+    owner: root
+    group: root
+    mode: 0644
+  notify: reload_systemd
+  loop:
+    - apt-upgrade.service
+    - apt-upgrade.timer
+    - apt-full-upgrade.service
+    - apt-full-upgrade.timer
+    - apt-cleanup.service
+    - apt-cleanup.timer
+    - docker-cleanup.service
+    - docker-cleanup.timer
+  loop_control:
+    loop_var: filename
+
+- name: enable and start systemd timers
+  ansible.builtin.systemd:
+    name: "{{ timer }}"
+    enabled: yes
+    state: started
+  loop:
+    - apt-upgrade.timer
+    - apt-full-upgrade.timer
+    - apt-cleanup.timer
+    - docker-cleanup.timer
+  loop_control:
+    loop_var: timer

@@ -1,8 +1,8 @@
 [Unit]
-Description=Run APT cleanup monthly
+Description=Run APT cleanup periodically
 
 [Timer]
-OnCalendar=monthly
+OnCalendar={{ apt_cleanup_schedule }}
 Persistent=true
 
 [Install]

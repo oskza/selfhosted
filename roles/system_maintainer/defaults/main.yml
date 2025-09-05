@@ -1,5 +1,12 @@
-journald_max_use: 1G
-journald_max_retention: 30day
+journald_max_size: 500M
+journald_retention_period: 14day
 
-tmp_retention: 10d
-var_temp_retention: 30d
+tmp_retention_period: 7d
+var_temp_retention_period: 14d
+
+apt_upgrade_schedule: "*-*-* 03:00:00"
+apt_full_upgrade_schedule: "Sun *-*-* 03:10:00"
+apt_cleanup_schedule: "*-*-* 03:25:00"
+docker_cleanup_schedule: "Sun *-*-* 03:30:00"
+
+unattended_reboot_time: "05:00"

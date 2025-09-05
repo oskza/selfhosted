@@ -1,7 +1,4 @@
 #!/bin/bash
-# Simple APT cleanup script
-# Προσοχή: τρέχει με root
-
 set -euo pipefail
 
 echo "[APT Cleanup] Starting cleanup..."

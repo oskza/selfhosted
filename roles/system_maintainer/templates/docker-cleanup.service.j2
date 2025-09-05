@@ -1,5 +1,7 @@
 [Unit]
-Description=Docker cleanup (images, networks)
+Description=Docker cleanup
+Wants=docker.service
+After=docker.service
 
 [Service]
 Type=oneshot

@@ -1,70 +1,38 @@
-- name: Deploy apt cleanup service
-  ansible.builtin.template:
-    src: apt-cleanup.service.j2
-    dest: /etc/systemd/system/apt-cleanup.service
-    owner: root
-    group: root
-    mode: 0644
-  notify: reload_systemd
-
-- name: Deploy apt cleanup timer
-  ansible.builtin.template:
-    src: apt-cleanup.timer.j2
-    dest: /etc/systemd/system/apt-cleanup.timer
-    owner: root
-    group: root
-    mode: 0644
-  notify: reload_systemd
-
-- name: Enable and start apt cleanup timer
+- name: stop and disable cleanup services and timers
   ansible.builtin.systemd:
-    name: apt-cleanup.timer
-    enabled: yes
-    state: started
-
-- name: Deploy docker cleanup service
-  ansible.builtin.template:
-    src: docker-cleanup.service.j2
-    dest: /etc/systemd/system/docker-cleanup.service
-    owner: root
-    group: root
-    mode: 0644
-  notify: reload_systemd
-
-- name: Deploy docker cleanup timer
-  ansible.builtin.template:
-    src: docker-cleanup.timer.j2
-    dest: /etc/systemd/system/docker-cleanup.timer
-    owner: root
-    group: root
-    mode: 0644
-  notify: reload_systemd
-
-- name: Enable and start docker cleanup timer
-  ansible.builtin.systemd:
-    name: docker-cleanup.timer
-    enabled: yes
-    state: started
-
-- name: Configure journald limits
-  ansible.builtin.lineinfile:
-    path: /etc/systemd/journald.conf
-    regexp: "^#?{{ prop.key }}="
-    line: "{{ prop.key }}={{ prop.value }}"
+    name: "{{ name }}"
+    state: stopped
+    enabled: no
   loop:
-    - { key: 'SystemMaxUse', value: '{{ journald_max_use }}' }
-    - { key: 'MaxRetentionSec', value: '{{ journald_max_retention }}' }
+    - apt-cleanup.timer
+    - docker-cleanup.timer
+    - apt-cleanup.service
+    - docker-cleanup.service
   loop_control:
-    loop_var: prop
-    label: "{{ prop.key }}"
-  notify: restart_journald
+    loop_var: name
+  ignore_errors: true
 
-- name: Configure tmpfiles cleanup policy
-  ansible.builtin.copy:
-    dest: /etc/tmpfiles.d/tmp.conf
-    content: |
-      d /tmp 1777 root root {{ tmp_retention }}
-      d /var/tmp 1777 root root {{ var_temp_retention }}
-    owner: root
-    group: root
-    mode: 0644
+- name: remove cleanup files (services, timers, scripts, configs)
+  ansible.builtin.file:
+    path: "{{ path }}"
+    state: absent
+  loop:
+    - /etc/systemd/system/apt-cleanup.service
+    - /etc/systemd/system/apt-cleanup.timer
+    - /etc/systemd/system/docker-cleanup.service
+    - /etc/systemd/system/docker-cleanup.timer
+    - "{{ directories.scripts }}/apt_cleanup.sh"
+    - "{{ directories.scripts }}/docker_cleanup.sh"
+    - /etc/tmpfiles.d/tmp.conf
+    - /etc/apt/apt.conf.d/52unattended-upgrades-local
+  loop_control:
+    loop_var: path
+  notify: reload_systemd
+
+- name: restore journald defaults
+  ansible.builtin.replace:
+    path: /etc/systemd/journald.conf
+    regexp: '^(SystemMaxUse|MaxRetentionSec)=.*'
+    replace: '# \g<0>'
+  ignore_errors: yes
+  notify: restart_journald
