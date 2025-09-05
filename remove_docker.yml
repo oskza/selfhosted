@@ -1,7 +1,0 @@
-- hosts: linux_servers
-  become: true
-  remote_user: "{{ ansible_username }}"
-  tasks:
-    - ansible.builtin.include_role:
-        name: docker_host
-        tasks_from: cleanup.yml
