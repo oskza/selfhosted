@@ -1,17 +1,14 @@
-- name: stop and disable docker backup timer
+- name: stop and disable docker backup service and timer
   systemd:
-    name: docker-backup.timer
+    name: "{{ item }}"
     enabled: no
     state: stopped
+  loop:
+    - docker-backup.timer
+    - docker-backup.service
   ignore_errors: true
 
-- name: stop docker backup service
-  systemd:
-    name: docker-backup.service
-    state: stopped
-  ignore_errors: true
-
-- name: remove docker backup files
+- name: remove docker backup files (service, timer, scripts)
   ansible.builtin.file:
     path: "{{ path }}"
     state: absent
