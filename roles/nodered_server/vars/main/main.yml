@@ -1,0 +1,4 @@
+nodered:
+  version: 4.1
+  host: "{{ vault_nodered_host }}"
+  port: "{{ vault_nodered_port }}"

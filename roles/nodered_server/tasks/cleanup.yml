@@ -1,0 +1,13 @@
+- name: stop and remove nodered container, volume and image
+  community.docker.docker_compose_v2:
+    project_src: "{{ directories.services }}/nodered"
+    state: absent
+    remove_images: all
+    remove_volumes: true
+  ignore_errors: true
+
+- name: delete nodered directory
+  ansible.builtin.file:
+    path: "{{ directories.services }}/nodered"
+    state: absent
+  ignore_errors: true

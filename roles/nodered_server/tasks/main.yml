@@ -1,0 +1,19 @@
+- name: setup nodered directory
+  ansible.builtin.file:
+    path: "{{ directories.services }}/nodered"
+    state: directory
+    owner: "{{ main_user.name }}"
+    group: "{{ main_user.name }}"
+    mode: 0755
+
+- name: deploy nodered from template file
+  ansible.builtin.template:
+    src: templates/docker-compose.yml.j2
+    dest: "{{ directories.services }}/nodered/docker-compose.yml"
+    owner: "{{ main_user.name }}"
+    group: "{{ main_user.name }}"
+    mode: 0644
+
+- name: run nodered using docker compose
+  community.docker.docker_compose_v2:
+    project_src: "{{ directories.services }}/nodered"

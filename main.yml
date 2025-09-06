@@ -23,6 +23,7 @@
     - system_monitor
     - homepage_dashboard
     - cloudflare_connector
+    - nodered_server
     - code_server
     - speedtest_tracker
     - password_manager

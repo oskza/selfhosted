@@ -1,0 +1,28 @@
+services:
+  nodered:
+    image: nodered/node-red:{{ nodered.version }}
+    container_name: nodered
+    restart: unless-stopped
+    volumes:
+      - data:/data
+    environment:
+      TZ: {{ timezone }}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.nodered.rule=Host(`{{ nodered.host }}`)"
+      - "traefik.http.routers.nodered.entrypoints=https"
+      - "traefik.http.routers.nodered.tls=true"
+      - "traefik.http.services.nodered.loadbalancer.server.port={{ nodered.port }}"
+      - "homepage.name=Node Red"
+      - "homepage.description=IOT Rules Engine"
+      - "homepage.icon=/icons/nodered.png"
+      - "homepage.href=https://{{ nodered.host }}"
+      - "homepage.group=Utils"
+      - "homepage.weight=1"
+networks:
+  default:
+    name: proxy_net
+    external: true
+volumes:
+  data:
+    name: nodered_data
