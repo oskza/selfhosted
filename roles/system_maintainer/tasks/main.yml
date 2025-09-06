@@ -20,8 +20,14 @@
     regexp: "^#?{{ prop.key }}="
     line: "{{ prop.key }}={{ prop.value }}"
   loop:
-    - { key: 'SystemMaxUse', value: '{{ journald_max_size }}' }
-    - { key: 'MaxRetentionSec', value: '{{ journald_retention_period }}' }
+    - { 
+        key: 'SystemMaxUse', 
+        value: '{{ journald_max_size }}' 
+      }
+    - { 
+        key: 'MaxRetentionSec', 
+        value: '{{ journald_retention_period }}' 
+      }
   loop_control:
     loop_var: prop
     label: "{{ prop.key }}"
@@ -52,10 +58,7 @@
     owner: root
     group: root
     mode: 0644
-  notify: reload_systemd
   loop:
-    - apt-upgrade.service
-    - apt-upgrade.timer
     - apt-full-upgrade.service
     - apt-full-upgrade.timer
     - apt-cleanup.service
@@ -64,14 +67,14 @@
     - docker-cleanup.timer
   loop_control:
     loop_var: filename
+  notify: reload_systemd
 
-- name: enable and start systemd timers
+- name: enable and start timers
   ansible.builtin.systemd:
     name: "{{ timer }}"
     enabled: yes
     state: started
   loop:
-    - apt-upgrade.timer
     - apt-full-upgrade.timer
     - apt-cleanup.timer
     - docker-cleanup.timer

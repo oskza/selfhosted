@@ -1,6 +1,10 @@
 [Unit]
 Description=APT cleanup
+ConditionPathExists={{ directories.scripts }}/apt_cleanup.sh
 
 [Service]
 Type=oneshot
 ExecStart={{ directories.scripts }}/apt_cleanup.sh
+SyslogIdentifier=apt-cleanup
+StandardOutput=journal
+StandardError=journal

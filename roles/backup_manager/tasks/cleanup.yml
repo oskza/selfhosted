@@ -1,14 +1,16 @@
 - name: stop and disable docker backup service and timer
   systemd:
-    name: "{{ item }}"
+    name: "{{ name }}"
     enabled: no
     state: stopped
   loop:
     - docker-backup.timer
     - docker-backup.service
+  loop_control:
+    loop_var: name
   ignore_errors: true
 
-- name: remove docker backup files (service, timer, scripts)
+- name: remove docker backup files (service, timer, scripts, config)
   ansible.builtin.file:
     path: "{{ path }}"
     state: absent
@@ -21,10 +23,7 @@
     - "{{ directories.scripts }}/shared/docker_helpers.sh"
   loop_control:
     loop_var: path
-
-- name: reload systemd daemon
-  systemd:
-    daemon_reload: yes
+  notify: reload_systemd
 
 - name: remove alpine image
   community.docker.docker_image:

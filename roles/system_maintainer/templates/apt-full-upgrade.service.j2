@@ -1,6 +1,12 @@
 [Unit]
-Description=Weekly APT full upgrade
+Description=APT full upgrade
+ConditionPathExists={{ directories.scripts }}/apt_full_upgrade.sh
+After=network.target
 
 [Service]
 Type=oneshot
 ExecStart={{ directories.scripts }}/apt_full_upgrade.sh
+TimeoutStartSec={{ apt_full_upgrade_service_timeout }}
+SyslogIdentifier=apt-full-upgrade
+StandardOutput=journal
+StandardError=journal

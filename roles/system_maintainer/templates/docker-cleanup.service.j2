@@ -1,8 +1,14 @@
 [Unit]
 Description=Docker cleanup
+ConditionPathExists={{ directories.scripts }}/docker_cleanup.sh
 Wants=docker.service
 After=docker.service
 
 [Service]
 Type=oneshot
 ExecStart={{ directories.scripts }}/docker_cleanup.sh
+User={{ main_user.name }}
+Group={{ main_user.name }}
+SyslogIdentifier=docker-cleanup
+StandardOutput=journal
+StandardError=journal

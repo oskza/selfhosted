@@ -11,13 +11,13 @@
     dest: /etc/docker-backup.conf
     content: |
       BACKUP_VOLUMES_DIR={{ backup_volumes_dir }}
-      RETENTION_DAYS={{ retention_days }}
-      {% if exclude_volumes is defined and exclude_volumes | length > 0 %}EXCLUDE_VOLUMES="{{ exclude_volumes | join(' ') }}"{% endif %}
+      RETENTION_DAYS={{ backup_retention_period }}
+      {% if backup_exclude_volumes is defined and backup_exclude_volumes | length > 0 %}EXCLUDE_VOLUMES="{{ backup_exclude_volumes | join(' ') }}"{% endif %}
     owner: root
     group: root
-    mode: '0644'
+    mode: 0644
 
-- name: copy backup scripts to scripts directory
+- name: copy script files
   ansible.builtin.copy:
     src: "{{ dir.src }}"
     dest: "{{ dir.dest }}"

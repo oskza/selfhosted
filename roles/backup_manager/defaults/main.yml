@@ -1,12 +1,12 @@
 backup_volumes_dir: "{{ directories.backup }}/volumes"
 
-retention_days: 14
+backup_retention_period: 14
 
-backup_time: "*-*-* 04:30:00"
+backup_schedule: "*-*-* 04:30:00"
 
-backup_service_timeout: 3600
+backup_service_timeout: 45m
 
-exclude_volumes:
+backup_exclude_volumes:
   - homepage_*_data
   - traefik_data
   - gluetun_data

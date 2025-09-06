@@ -1,11 +1,15 @@
 [Unit]
-Description=Backup Docker volumes
+Description=Docker backup
+ConditionPathExists={{ directories.scripts }}/docker_volumes_backup.sh
 Wants=docker.service
 After=docker.service
 
 [Service]
 Type=oneshot
-User={{ main_user.name }}
-Group={{ main_user.name }}
 ExecStart={{ directories.scripts }}/docker_volumes_backup.sh
 TimeoutStartSec={{ backup_service_timeout }}
+User={{ main_user.name }}
+Group={{ main_user.name }}
+SyslogIdentifier=docker-backup
+StandardOutput=journal
+StandardError=journal

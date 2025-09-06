@@ -1,8 +1,8 @@
 [Unit]
-Description=Run Docker volumes backup nightly
+Description=Periodic Docker backup
 
 [Timer]
-OnCalendar={{ backup_time }}
+OnCalendar={{ backup_schedule }}
 Persistent=true
 
 [Install]

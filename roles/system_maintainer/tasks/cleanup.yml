@@ -1,26 +1,31 @@
-- name: stop and disable cleanup services and timers
+- name: stop and disable services and timers
   ansible.builtin.systemd:
     name: "{{ name }}"
     state: stopped
     enabled: no
   loop:
+    - apt-full-upgrade.timer
+    - apt-full-upgrade.service
     - apt-cleanup.timer
-    - docker-cleanup.timer
     - apt-cleanup.service
+    - docker-cleanup.timer
     - docker-cleanup.service
   loop_control:
     loop_var: name
   ignore_errors: true
 
-- name: remove cleanup files (services, timers, scripts, configs)
+- name: remove created files (services, timers, scripts, configs)
   ansible.builtin.file:
     path: "{{ path }}"
     state: absent
   loop:
+    - /etc/systemd/system/apt-full-upgrade.service
+    - /etc/systemd/system/apt-full-upgrade.timer
     - /etc/systemd/system/apt-cleanup.service
     - /etc/systemd/system/apt-cleanup.timer
     - /etc/systemd/system/docker-cleanup.service
     - /etc/systemd/system/docker-cleanup.timer
+    - "{{ directories.scripts }}/apt_full_upgrade.sh"
     - "{{ directories.scripts }}/apt_cleanup.sh"
     - "{{ directories.scripts }}/docker_cleanup.sh"
     - /etc/tmpfiles.d/tmp.conf
@@ -33,6 +38,6 @@
   ansible.builtin.replace:
     path: /etc/systemd/journald.conf
     regexp: '^(SystemMaxUse|MaxRetentionSec)=.*'
-    replace: '# \g<0>'
+    replace: '#\g<0>'
   ignore_errors: yes
   notify: restart_journald
