@@ -17,6 +17,7 @@ pihole:
     - "{{ vault_system_monitor_public_hostname }},{{ proxy_local_hostname }}"
     - "{{ vault_admin_dashboard_public_hostname }},{{ proxy_local_hostname }}"
     - "{{ vault_public_dashboard_public_hostname }},{{ proxy_local_hostname }}"
+    - "{{ vault_nodered_public_hostname }},{{ proxy_local_hostname }}"
     - "{{ vault_code_server_public_hostname }},{{ proxy_local_hostname }}"
     - "{{ vault_speedtest_tracker_public_hostname }},{{ proxy_local_hostname }}"
     - "{{ vault_password_manager_public_hostname }},{{ proxy_local_hostname }}"
