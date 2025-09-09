@@ -8,11 +8,17 @@
 
 - name: deploy gluetun from template file
   ansible.builtin.template:
-    src: templates/docker-compose.yml.j2
-    dest: "{{ directories.services }}/gluetun/docker-compose.yml"
+    src: templates/{{ filename }}.j2
+    dest: "{{ directories.services }}/gluetun/{{ filename }}"
     owner: "{{ main_user.name }}"
     group: "{{ main_user.name }}"
     mode: 0644
+  loop:
+    - Dockerfile
+    - docker-compose.yml
+    - config.toml
+  loop_control:
+    loop_var: filename
 
 - name: run gluetun using docker compose
   community.docker.docker_compose_v2:

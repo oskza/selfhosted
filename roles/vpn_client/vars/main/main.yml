@@ -1,5 +1,7 @@
 gluetun:
   version: v3.40
   provider: nordvpn
+  control_port: "{{ vault_gluetun_control_port }}"
   countries: "{{ vault_gluetun_countries }}"
   private_key: "{{ vault_gluetun_private_key }}"
+  api_key: "{{ vault_gluetun_api_key }}"

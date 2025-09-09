@@ -1,6 +1,8 @@
 services:
   gluetun:
-    image: qmcgaw/gluetun:{{ gluetun.version }}
+    build:
+      context: .
+    image: my-gluetun
     container_name: gluetun
     restart: unless-stopped
     cap_add:
@@ -15,7 +17,18 @@ services:
       VPN_SERVICE_PROVIDER: {{ gluetun.provider }}
       WIREGUARD_PRIVATE_KEY: {{ gluetun.private_key }}
       SERVER_COUNTRIES: {{ gluetun.countries }}
+      CONTROL_SERVER_PORT: {{ gluetun.control_port }}
       UPDATER_PERIOD: 24h
+    labels:
+      - "homepage.instance.admin.name=Gluetun"
+      - "homepage.instance.admin.description=VPN Client"
+      - "homepage.instance.admin.icon=/icons/gluetun.png"
+      - "homepage.instance.admin.group=System"
+      - "homepage.instance.admin.weight=6"
+      - "homepage.instance.admin.widget.type=gluetun"
+      - "homepage.instance.admin.widget.url=http://gluetun:{{ gluetun.control_port }}"
+      - "homepage.instance.admin.widget.fields=[\"public_ip\", \"country\"]"
+      - "homepage.instance.admin.widget.key={{ gluetun.api_key }}"
 networks:
   default:
     name: proxy_net
