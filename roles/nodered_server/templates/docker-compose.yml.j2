@@ -13,12 +13,12 @@ services:
       - "traefik.http.routers.nodered.entrypoints=https"
       - "traefik.http.routers.nodered.tls=true"
       - "traefik.http.services.nodered.loadbalancer.server.port={{ nodered.port }}"
-      - "homepage.name=Node Red"
-      - "homepage.description=IOT Rules Engine"
-      - "homepage.icon=/icons/nodered.png"
-      - "homepage.href=https://{{ nodered.host }}"
-      - "homepage.group=Utils"
-      - "homepage.weight=1"
+      - "homepage.instance.admin.name=Node Red"
+      - "homepage.instance.admin.description=IOT Rules Engine"
+      - "homepage.instance.admin.icon=/icons/nodered.png"
+      - "homepage.instance.admin.href=https://{{ nodered.host }}"
+      - "homepage.instance.admin.group=Utils"
+      - "homepage.instance.admin.weight=1"
 networks:
   default:
     name: proxy_net
