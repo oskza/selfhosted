@@ -1,6 +1,6 @@
 - name: override docker.yaml content in container
   community.docker.docker_container_copy_into:
-    container: "homepage_{{ instance_name }}"
+    container: "homepage-{{ instance_name }}"
     container_path: /app/config/docker.yaml
     content: "{{ lookup('file', 'docker.yaml') }}"
     mode: 0644
@@ -22,7 +22,7 @@
 
 - name: copy config files into container
   ansible.builtin.command:
-    cmd: "docker cp {{ directories.services }}/homepage/{{ instance_name }}/{{ file_name }} homepage_{{ instance_name }}:/app/config/{{ file_name }}"
+    cmd: "docker cp {{ directories.services }}/homepage/{{ instance_name }}/{{ file_name }} homepage-{{ instance_name }}:/app/config/{{ file_name }}"
   loop:
     - bookmarks.yaml
     - services.yaml
@@ -32,4 +32,4 @@
     loop_var: file_name
 
 - name: restart container
-  ansible.builtin.command: "docker restart homepage_{{ instance_name}}"
+  ansible.builtin.command: "docker restart homepage-{{ instance_name}}"

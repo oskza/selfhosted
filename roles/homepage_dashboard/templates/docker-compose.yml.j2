@@ -2,7 +2,7 @@ services:
 {% for instance in homepage.instances %}
   homepage_{{ instance.name }}:
     image: ghcr.io/gethomepage/homepage:{{ homepage.version }}
-    container_name: homepage_{{ instance.name }}
+    container_name: homepage-{{ instance.name }}
     restart: unless-stopped
     dns:
       - {{ local_dns_internal_ip }}
