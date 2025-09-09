@@ -26,6 +26,7 @@ services:
       CF_DNS_API_TOKEN: {{ traefik.cloudflare_credentials.dns_api_token }}
     command:
       - --api.dashboard=true
+      - --api.insecure=true
       - --entrypoints.http.address=:80
       - --entrypoints.http.http.redirections.entrypoint.to=https
       - --entrypoints.http.http.redirections.entrypoint.scheme=https
@@ -72,9 +73,7 @@ services:
       - "homepage.instance.admin.weight=5"
       - "homepage.instance.admin.href=https://{{ traefik.host }}"
       - "homepage.instance.admin.widget.type=traefik"
-      - "homepage.instance.admin.widget.url=https://{{ traefik.host }}"
-      - "homepage.instance.admin.widget.username={{ traefik.dashboard_credentials.username }}"
-      - "homepage.instance.admin.widget.password={{ traefik.dashboard_credentials.password }}"
+      - "homepage.instance.admin.widget.url=http://traefik:8080"
 networks:
   proxy_net:
     external: true
