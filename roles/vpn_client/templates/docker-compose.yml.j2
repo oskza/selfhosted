@@ -11,8 +11,6 @@ services:
       - data:/gluetun
     environment:
       TZ: {{ timezone }}
-      PUID: {{ main_user.uid }}
-      PGID: {{ main_user.gid }}
       VPN_TYPE: wireguard
       VPN_SERVICE_PROVIDER: {{ gluetun.provider }}
       WIREGUARD_PRIVATE_KEY: {{ gluetun.private_key }}
