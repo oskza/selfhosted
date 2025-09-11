@@ -5,3 +5,4 @@ docker_external_networks:
     ipam_config:
       - subnet: "{{ vault_proxy_subnet }}"
   - name: tunnel_net
+  - name: media_net
