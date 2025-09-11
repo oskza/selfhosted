@@ -27,3 +27,4 @@ pihole:
     - "{{ vault_bazarr_public_hostname }},{{ proxy_local_hostname }}"
     - "{{ vault_qbittorrent_public_hostname }},{{ proxy_local_hostname }}"
     - "{{ vault_prowlarr_public_hostname }},{{ proxy_local_hostname }}"
+    - "{{ vault_youtube_downloader_public_hostname }},{{ proxy_local_hostname }}"
