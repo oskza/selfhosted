@@ -1,0 +1,32 @@
+- name: create torrent directories
+  ansible.builtin.file:
+    path: "{{ directories.media_1 }}/downloads/torrents/{{ dirname }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0777
+  loop:
+    - complete
+    - incomplete
+  loop_control:
+    loop_var: dirname
+
+- name: create media downloader directory
+  ansible.builtin.file:
+    path: "{{ directories.services }}/media-downloader"
+    state: directory
+    owner: "{{ main_user.name }}"
+    group: "{{ main_user.name }}"
+    mode: 0755
+
+- name: deploy media downloader from template file
+  ansible.builtin.template:
+    src: templates/docker-compose.yml.j2
+    dest: "{{ directories.services }}/media-downloader/docker-compose.yml"
+    owner: "{{ main_user.name }}"
+    group: "{{ main_user.name }}"
+    mode: 0644
+
+- name: run media downloader using docker compose
+  community.docker.docker_compose_v2:
+    project_src: "{{ directories.services }}/media-downloader"

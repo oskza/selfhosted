@@ -1,18 +1,13 @@
 services:
 {% for service in media_services %}
 {% set homepage_label_prefix = 'homepage' if service.homepage.public | default(false) else 'homepage.instance.admin' %}
-
   {{ service.name }}:
     image: ghcr.io/hotio/{{ service.name }}:{{ service.version }}
     container_name: {{ service.name }}
     restart: unless-stopped
-{% if service.route_via_vpn | default(false) %}
-    network_mode: "container:gluetun"
-{% else %}
     networks:
       - media_net
       - proxy_net
-{% endif %}
 {% if service.name == 'plex' %}
     ports:
       - {{ service.port }}:{{ service.port }}
@@ -26,8 +21,6 @@ services:
            | map(attribute='value') | list %}
       - {{ dir }}/media:{{ dir | regex_replace('.*/(data_[^/]+)$', '/\\1') }}/media
 {% endfor %}
-{% elif service.name == 'qbittorrent' %}
-      - {{ directories.media_1 }}/downloads/torrents:/data_1/downloads/torrents
 {% else %}
 {% for dir in directories | dict2items
            | selectattr('key', 'match', '^media(_.*)?$')
@@ -73,7 +66,7 @@ services:
 
 networks:
   media_net:
-    name: media_net
+    external: true
   proxy_net:
     external: true
 

@@ -1,0 +1,12 @@
+- name: stop and remove media downloader containers and images
+  community.docker.docker_compose_v2:
+    project_src: "{{ directories.services }}/media-downloader"
+    state: absent
+    remove_images: all
+  ignore_errors: true
+
+- name: delete media downloader directory
+  ansible.builtin.file:
+    path: "{{ directories.services }}/media-downloader"
+    state: absent
+  ignore_errors: true

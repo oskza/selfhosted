@@ -1,0 +1,18 @@
+umask: '002'
+
+qbittorrent:
+  version: release-5.1.2
+  host: "{{ vault_qbittorrent_host }}"
+  port: "{{ vault_qbittorrent_port }}"
+  username: "{{ vault_qbittorrent_username }}"
+  password: "{{ vault_qbittorrent_password }}"
+
+prowlarr:
+  version: release-2.0.5.5160
+  host: "{{ vault_prowlarr_host }}"
+  port: "{{ vault_prowlarr_port }}"
+  api_key: "{{ vault_prowlarr_api_key }}"
+
+flaresolverr:
+  version: v3.4.0
+  port: "{{ vault_flaresolverr_port }}"

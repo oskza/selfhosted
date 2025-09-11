@@ -12,18 +12,6 @@
          | list }}"
     - [ "anime", "movies", "tv" ]
 
-- name: create download directories
-  ansible.builtin.file:
-    path: "{{ directories.media_1 }}/downloads/{{ item }}"
-    state: directory
-    owner: root
-    group: root
-    mode: 0777
-  loop:
-    - torrents/complete
-    - torrents/incomplete
-    - youtube
-
 - name: create media server directory
   ansible.builtin.file:
     path: "{{ directories.services }}/media-server"

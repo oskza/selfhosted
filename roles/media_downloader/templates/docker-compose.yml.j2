@@ -1,0 +1,87 @@
+services:
+  qbittorrent:
+    image: ghcr.io/hotio/qbittorrent:{{ qbittorrent.version }}
+    container_name: qbittorrent
+    restart: unless-stopped
+    network_mode: "container:gluetun"
+    volumes:
+      - qbittorrent_data:/config
+      - {{ directories.media_1 }}/downloads/torrents:/data_1/downloads/torrents
+    environment:
+      TZ: {{ timezone }}
+      PUID: {{ main_user.uid }}
+      PGID: {{ main_user.gid }}
+      UMASK: {{ umask | default('002') }}
+      WEBUI_PORTS: {{ qbittorrent.port }}/tcp,{{ qbittorrent.port }}/udp
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.qbittorrent.rule=Host(`{{ qbittorrent.host }}`)"
+      - "traefik.http.routers.qbittorrent.entrypoints=https"
+      - "traefik.http.routers.qbittorrent.tls=true"
+      - "traefik.http.services.qbittorrent.loadbalancer.server.port={{ qbittorrent.port }}"
+      - "traefik.docker.network=proxy_net"
+      - "homepage.instance.admin.name=qBittorrent"
+      - "homepage.instance.admin.description=Torrent Client"
+      - "homepage.instance.admin.icon=/icons/qbittorrent.png"
+      - "homepage.instance.admin.href=https://{{ qbittorrent.host }}"
+      - "homepage.instance.admin.group=Download"
+      - "homepage.instance.admin.weight=2"
+      - "homepage.instance.admin.widget.type=qbittorrent"
+      - "homepage.instance.admin.widget.url=http://gluetun:{{ qbittorrent.port }}"
+      - "homepage.instance.admin.widget.username={{ qbittorrent.username }}"
+      - "homepage.instance.admin.widget.password={{ qbittorrent.password }}"
+  prowlarr:
+    image: ghcr.io/hotio/prowlarr:{{ prowlarr.version }}
+    container_name: prowlarr
+    restart: unless-stopped
+    networks:
+      - media_net
+      - proxy_net
+    volumes:
+      - prowlarr_data:/config
+{% for dir in directories | dict2items
+           | selectattr('key', 'match', '^media(_.*)?$')
+           | map(attribute='value') | list %}
+      - {{ dir }}:{{ dir | regex_replace('.*/(data_[^/]+)$', '/\\1') }}
+{% endfor %}
+    environment:
+      TZ: {{ timezone }}
+      PUID: {{ main_user.uid }}
+      PGID: {{ main_user.gid }}
+      UMASK: {{ umask | default('002') }}
+      WEBUI_PORTS: {{ prowlarr.port }}/tcp,{{ prowlarr.port }}/udp
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.prowlarr.rule=Host(`{{ prowlarr.host }}`)"
+      - "traefik.http.routers.prowlarr.entrypoints=https"
+      - "traefik.http.routers.prowlarr.tls=true"
+      - "traefik.http.services.prowlarr.loadbalancer.server.port={{ prowlarr.port }}"
+      - "traefik.docker.network=proxy_net"
+      - "homepage.instance.admin.name=Prowlarr"
+      - "homepage.instance.admin.description=Indexer Manager"
+      - "homepage.instance.admin.icon=/icons/prowlarr.png"
+      - "homepage.instance.admin.href=https://{{ prowlarr.host }}"
+      - "homepage.instance.admin.group=Download"
+      - "homepage.instance.admin.weight=3"
+      - "homepage.instance.admin.widget.type=prowlarr"
+      - "homepage.instance.admin.widget.url=http://prowlarr:{{ prowlarr.port }}"
+      - "homepage.instance.admin.widget.key={{ prowlarr.api_key }}"
+  flaresolverr:
+    image: ghcr.io/flaresolverr/flaresolverr:{{ flaresolverr.version }}
+    container_name: flaresolverr
+    restart: unless-stopped
+    networks:
+      - media_net
+    environment:
+      - TZ={{ timezone }}
+      - PORT={{ flaresolverr.port }}
+networks:
+  media_net:
+    external: true
+  proxy_net:
+    external: true
+volumes:
+  qbittorrent_data:
+    name: qbittorrent_data
+  prowlarr_data:
+    name: prowlarr_data

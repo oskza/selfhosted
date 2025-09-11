@@ -2,7 +2,7 @@ umask: '002'
 
 media_services:
   - name: plex
-    version: release-1.42.1.10054-f333bdaa8
+    version: release-1.42.1.10060-4e8b05daf
     host: "{{ vault_plex_host }}"
     port: "{{ vault_plex_port }}"
     advertise_url: "{{ vault_plex_advertise_url }}"
@@ -15,21 +15,8 @@ media_services:
       fields: ["streams", "movies", "tv"]
       group: Media
       order: 1
-  - name: qbittorrent
-    version: release-5.1.2
-    host: "{{ vault_qbittorrent_host }}"
-    port: "{{ vault_qbittorrent_port }}"
-    route_via_vpn: true
-    homepage:
-      title: qBittorrent
-      description: Torrent Client
-      icon: /icons/qbittorrent.png
-      username: "{{ vault_qbittorrent_username }}"
-      password: "{{ vault_qbittorrent_password }}"
-      group: Download
-      order: 1
   - name: radarr
-    version: nightly-5.27.4.10154
+    version: release-5.27.5.10198
     host: "{{ vault_radarr_host }}"
     port: "{{ vault_radarr_port }}"
     homepage:
@@ -53,7 +40,7 @@ media_services:
       group: Media
       order: 3
   - name: bazarr
-    version: nightly-873b444
+    version: release-1.5.2
     host: "{{ vault_bazarr_host }}"
     port: "{{ vault_bazarr_port }}"
     homepage:
@@ -63,14 +50,3 @@ media_services:
       key: "{{ vault_bazarr_api_key }}"
       group: Media
       order: 4
-  - name: prowlarr
-    version: release-1.37.0.5076
-    host: "{{ vault_prowlarr_host }}"
-    port: "{{ vault_prowlarr_port }}"
-    homepage:
-      title: Prowlarr
-      description: Indexer Manager
-      icon: /icons/prowlarr.png
-      key: "{{ vault_prowlarr_api_key }}"
-      group: Download
-      order: 2

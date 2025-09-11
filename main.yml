@@ -28,5 +28,6 @@
     - speedtest_tracker
     - password_manager
     - vpn_client
+    - media_downloader
     - media_server
-    - youtube_server
+    - youtube_downloader
