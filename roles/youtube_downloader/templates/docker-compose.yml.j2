@@ -1,0 +1,90 @@
+services:
+  tubearchivist:
+    image: bbilly1/tubearchivist:{{ tubearchivist.version }}
+    container_name: tubearchivist
+    restart: unless-stopped
+    depends_on:
+      - archivist-es
+      - archivist-redis
+    networks:
+      - proxy_net
+      - archivist_net
+    volumes:
+      - media:/youtube
+      - cache:/cache
+    environment:
+      - TZ={{ timezone }}
+      - HOST_UID={{ main_user.uid }}
+      - HOST_GID={{ main_user.gid }}
+      - TA_HOST=https://{{ tubearchivist.host }}
+      - TA_PORT={{ tubearchivist.port }}
+      - TA_USERNAME={{ tubearchivist.username }}
+      - TA_PASSWORD={{ tubearchivist.password }}
+      - ES_URL=http://archivist-es:9200
+      - ELASTIC_PASSWORD={{ elastic.password }}
+      - REDIS_CON=redis://archivist-redis:6379
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.tubearchivist.rule=Host(`{{ tubearchivist.host }}`)"
+      - "traefik.http.routers.tubearchivist.entrypoints=https"
+      - "traefik.http.routers.tubearchivist.tls=true"
+      - "traefik.http.services.tubearchivist.loadbalancer.server.port={{ tubearchivist.port }}"
+      - "homepage.name=Tube Archivist"
+      - "homepage.description=Youtube Downloader"
+      - "homepage.icon=/icons/tubearchivist.png"
+      - "homepage.href=https://{{ tubearchivist.host }}"
+      - "homepage.group=Download"
+      - "homepage.weight=1"
+      - "homepage.widget.type=tubearchivist"
+      - "homepage.widget.url=http://tubearchivist:{{ tubearchivist.port }}"
+      - "homepage.widget.key={{ tubearchivist.api_key }}"
+      - "homepage.widget.fields=[\"downloads\", \"videos\", \"channels\", \"playlists\"]"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:{{ tubearchivist.port }}/api/health"]
+      interval: 2m
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+  archivist-redis:
+    image: redis:{{ redis.version }}
+    container_name: archivist-redis
+    restart: unless-stopped
+    depends_on:
+      - archivist-es
+    networks:
+      - archivist_net
+    volumes:
+      - redis_data:/data
+  archivist-es:
+    image: bbilly1/tubearchivist-es:{{ elastic.version }}
+    container_name: archivist-es
+    restart: unless-stopped
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    networks:
+      - archivist_net
+    volumes:
+      - es_data:/usr/share/elasticsearch/data
+    environment:
+      - "ELASTIC_PASSWORD={{ elastic.password }}"
+      - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
+      - "xpack.security.enabled=true"
+      - "discovery.type=single-node"
+      - "path.repo=/usr/share/elasticsearch/data/snapshot"
+networks:
+  proxy_net:
+    external: true
+  archivist_net:
+    name: archivist_net
+volumes:
+  media:
+    name: tubearchivist_media
+  cache:
+    name: tubearchivist_cache
+  redis_data:
+    name: archivist-redis_data
+  es_data:
+    name: archivist-es_data
+

@@ -1,0 +1,19 @@
+- name: setup tubearchivist service directory
+  ansible.builtin.file:
+    path: "{{ directories.services }}/tubearchivist"
+    state: directory
+    owner: "{{ main_user.name }}"
+    group: "{{ main_user.name }}"
+    mode: 0755
+
+- name: deploy tubearchivist from template file
+  ansible.builtin.template:
+    src: templates/docker-compose.yml.j2
+    dest: "{{ directories.services }}/tubearchivist/docker-compose.yml"
+    owner: "{{ main_user.name }}"
+    group: "{{ main_user.name }}"
+    mode: 0644
+
+- name: run tubearchivist using docker compose
+  community.docker.docker_compose_v2:
+    project_src: "{{ directories.services }}/tubearchivist"

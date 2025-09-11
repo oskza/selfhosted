@@ -1,0 +1,14 @@
+tubearchivist:
+  version: v0.5.7
+  host: "{{ vault_tubearchivist_host }}"
+  port: "{{ vault_tubearchivist_port }}"
+  username: "{{ vault_tubearchivist_username }}"
+  password: "{{ vault_tubearchivist_password }}"
+  api_key: "{{ vault_tubearchivist_api_key }}"
+
+elastic:
+  version: 8.18.2
+  password: "{{ vault_elastic_password }}"
+
+redis:
+  version: 8.2
