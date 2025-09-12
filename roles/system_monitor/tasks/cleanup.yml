@@ -1,12 +1,12 @@
-- name: stop and remove glances container and image
+- name: stop and remove grafana stack containers and images
   community.docker.docker_compose_v2:
-    project_src: "{{ directories.services }}/glances"
+    project_src: "{{ directories.services }}/grafana"
     state: absent
     remove_images: all
   ignore_errors: true
 
-- name: delete glances directory
+- name: delete grafana stack directory
   ansible.builtin.file:
-    path: "{{ directories.services }}/glances"
+    path: "{{ directories.services }}/grafana"
     state: absent
   ignore_errors: true

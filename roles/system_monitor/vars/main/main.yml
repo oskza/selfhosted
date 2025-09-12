@@ -1,4 +1,22 @@
-glances:
-  version: 4.3.3
-  host: "{{ vault_glances_host }}"
-  port: "{{ vault_glances_port }}"
+grafana:
+  version: 12.0.0
+  host: "{{ vault_grafana_host }}"
+  port: "{{ vault_grafana_port }}"
+  username: "{{ vault_grafana_username }}"
+  password: "{{ vault_grafana_password }}"
+
+prometheus:
+  version: v3.5.0
+  host: "{{ vault_prometheus_host }}"
+  port: "{{ vault_prometheus_port }}"
+
+loki:
+  version: 3.5
+  host: "{{ vault_loki_host }}"
+  port: "{{ vault_loki_port }}"
+
+alloy:
+  version: v1.10.2
+  host: "{{ vault_alloy_host }}"
+  port: "{{ vault_alloy_port }}"
+  storage_path: /var/lib/alloy/data

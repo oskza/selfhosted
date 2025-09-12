@@ -1,19 +1,27 @@
-- name: setup glances directory
+- name: setup grafana stack directory
   ansible.builtin.file:
-    path: "{{ directories.services }}/glances"
+    path: "{{ directories.services }}/grafana"
     state: directory
     owner: "{{ main_user.name }}"
     group: "{{ main_user.name }}"
     mode: 0755
 
-- name: deploy glances from template file
+- name: deploy grafana stack from template files
   ansible.builtin.template:
-    src: templates/docker-compose.yml.j2
-    dest: "{{ directories.services }}/glances/docker-compose.yml"
+    src: "templates/{{ filename }}.j2"
+    dest: "{{ directories.services }}/grafana/{{ filename }}"
     owner: "{{ main_user.name }}"
     group: "{{ main_user.name }}"
     mode: 0644
+  loop:
+    - config.alloy
+    - Dockerfile.alloy
+    - datasources.yaml
+    - Dockerfile.grafana
+    - docker-compose.yml
+  loop_control:
+    loop_var: filename
 
-- name: run glances using docker compose
+- name: run grafana stack using docker compose
   community.docker.docker_compose_v2:
-    project_src: "{{ directories.services }}/glances"
+    project_src: "{{ directories.services }}/grafana"

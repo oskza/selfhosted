@@ -1,0 +1,5 @@
+FROM grafana/grafana:{{ grafana.version }}
+
+RUN mkdir -p /etc/grafana/provisioning/datasources
+
+COPY datasources.yaml /etc/grafana/provisioning/datasources/ds.yaml

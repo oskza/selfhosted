@@ -1,30 +1,108 @@
 services:
-  glances:
-    image: nicolargo/glances:{{ glances.version }}
-    container_name: glances
+  grafana:
+    build:
+      context: .
+      dockerfile: Dockerfile.grafana
+    image: my-grafana
+    container_name: grafana
     restart: unless-stopped
-    pid: host
+    networks:
+      - grafana_net
+      - proxy_net
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-{% for drive in drives.additional %}
-      - {{ drive.mount_point }}:{{ drive.mount_point }}
-{% endfor %}  
+      - grafana_data:/var/lib/grafana
     environment:
-      TZ: {{ timezone }}
-      GLANCES_OPT: -w
+      - GF_AUTH_ANONYMOUS_ENABLED=false
+      - GF_SECURITY_ADMIN_USER={{ grafana.username }}
+      - GF_SECURITY_ADMIN_PASSWORD={{ grafana.password }}
+      - GF_PATHS_PROVISIONING=/etc/grafana/provisioning
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.glances.rule=Host(`{{ glances.host }}`)"
-      - "traefik.http.routers.glances.entrypoints=https"
-      - "traefik.http.routers.glances.tls=true"
-      - "traefik.http.services.glances.loadbalancer.server.port={{ glances.port }}"
-      - "homepage.instance.admin.name=Glances"
-      - "homepage.instance.admin.description=See More"
-      - "homepage.instance.admin.icon=/icons/glances.png"
-      - "homepage.instance.admin.href=https://{{ glances.host }}"
-      - "homepage.instance.admin.group=Performance"
-      - "homepage.instance.admin.weight=500"
+      - "traefik.http.routers.grafana.rule=Host(`{{ grafana.host }}`)"
+      - "traefik.http.routers.grafana.entrypoints=https"
+      - "traefik.http.routers.grafana.tls=true"
+      - "traefik.http.services.grafana.loadbalancer.server.port={{ grafana.port }}"
+      - "homepage.instance.admin.name=Grafana"
+      - "homepage.instance.admin.description=Observability Platfom"
+      - "homepage.instance.admin.icon=/icons/grafana.png"
+      - "homepage.instance.admin.href=https://{{ grafana.host }}"
+      - "homepage.instance.admin.group=System"
+      - "homepage.instance.admin.weight=7"
+      - "homepage.instance.admin.widget.type=grafana"
+      - "homepage.instance.admin.widget.version=2"
+      - "homepage.instance.admin.widget.url=http://grafana:{{ grafana.port }}"
+      - "homepage.instance.admin.widget.username={{ grafana.username }}"
+      - "homepage.instance.admin.widget.password={{ grafana.password }}"
+  prometheus:
+    image: prom/prometheus:{{ prometheus.version }}
+    container_name: prometheus
+    restart: unless-stopped
+    networks:
+      - grafana_net
+      - proxy_net
+    volumes:
+      - prometheus_data:/prometheus
+    command:
+      - --web.enable-remote-write-receiver
+      - --config.file=/etc/prometheus/prometheus.yml
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.prometheus.rule=Host(`{{ prometheus.host }}`)"
+      - "traefik.http.routers.prometheus.entrypoints=https"
+      - "traefik.http.routers.prometheus.tls=true"
+      - "traefik.http.services.prometheus.loadbalancer.server.port={{ prometheus.port }}"
+      - "homepage.instance.admin.name=Prometheus"
+      - "homepage.instance.admin.description=Monitoring System"
+      - "homepage.instance.admin.icon=/icons/prometheus.png"
+      - "homepage.instance.admin.href=https://{{ prometheus.host }}"
+      - "homepage.instance.admin.group=System"
+      - "homepage.instance.admin.weight=8"
+      - "homepage.instance.admin.widget.type=prometheus"
+      - "homepage.instance.admin.widget.url=http://prometheus:{{ prometheus.port }}"
+  loki:
+    image: grafana/loki:{{ loki.version }}
+    container_name: loki
+    restart: unless-stopped
+    networks:
+      - grafana_net
+    volumes:
+      - loki_data:/loki
+    command: -config.file=/etc/loki/local-config.yaml
+  alloy:
+    build:
+      context: .
+      dockerfile: Dockerfile.alloy
+    image: my-alloy
+    container_name: alloy
+    restart: unless-stopped
+    networks:
+      - grafana_net
+      - proxy_net
+    volumes:
+      - alloy_data:{{ alloy.storage_path }}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.alloy.rule=Host(`{{ alloy.host }}`)"
+      - "traefik.http.routers.alloy.entrypoints=https"
+      - "traefik.http.routers.alloy.tls=true"
+      - "traefik.http.services.alloy.loadbalancer.server.port={{ alloy.port }}"
+      - "homepage.instance.admin.name=Alloy"
+      - "homepage.instance.admin.description=Telemetry Collector"
+      - "homepage.instance.admin.icon=/icons/alloy.png"
+      - "homepage.instance.admin.href=https://{{ alloy.host }}"
+      - "homepage.instance.admin.group=System"
+      - "homepage.instance.admin.weight=9"
 networks:
-  default:
-    name: proxy_net
+  grafana_net:
+    name: grafana_net
+  proxy_net:
     external: true
+volumes:
+  grafana_data:
+    name: grafana_data
+  prometheus_data:
+    name: prometheus_data
+  loki_data:
+    name: loki_data
+  alloy_data:
+    name: alloy_data

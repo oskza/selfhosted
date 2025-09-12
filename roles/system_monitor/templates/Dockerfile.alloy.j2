@@ -1,0 +1,8 @@
+FROM grafana/alloy:{{ alloy.version }}
+
+COPY config.alloy /etc/alloy/config.alloy
+
+CMD ["run", \
+     "--server.http.listen-addr=0.0.0.0:{{ alloy.port }}", \
+     "--storage.path={{ alloy.storage_path }}", \
+     "/etc/alloy/config.alloy"]
