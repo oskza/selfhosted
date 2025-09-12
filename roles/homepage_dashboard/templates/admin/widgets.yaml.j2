@@ -1,16 +1,3 @@
-- glances:
-    url: http://glances:{{ glances_port }}
-    version: 4
-    cpu: false
-    mem: false
-    cputemp: true
-    uptime: true
-    disk:
-      - /etc/hosts
-{% for drive in drives.additional %}
-      - {{ drive.mount_point }}
-{% endfor %}
-
 - search:
     provider: google
     target: _blank
