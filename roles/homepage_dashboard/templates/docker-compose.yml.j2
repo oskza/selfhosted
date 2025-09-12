@@ -30,5 +30,5 @@ networks:
 volumes:
 {% for instance in homepage.instances %}
   {{ instance.name }}_data:
-    name: homepage_{{ instance.name }}_data
+    name: homepage-{{ instance.name }}_data
 {% endfor %}
