@@ -79,6 +79,7 @@ services:
       - grafana_net
       - proxy_net
     volumes:
+      - /var/log:/var/log:ro
       - alloy_data:{{ alloy.storage_path }}
     labels:
       - "traefik.enable=true"
