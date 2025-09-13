@@ -25,3 +25,4 @@
 - name: run grafana stack using docker compose
   community.docker.docker_compose_v2:
     project_src: "{{ directories.services }}/grafana"
+    build: always
