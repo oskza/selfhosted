@@ -1,6 +1,14 @@
 local.file_match "local_files" {
-  path_targets = [{"__path__" = "/var/log/*.log"}]
-  sync_period = "5s"
+  path_targets = [
+    {
+      "__path__" = "/var/log/*.log",
+      "__address__" = "localhost",
+      "instance" = "linux-server-1",
+      "job" = "system",
+      "service" = "host",
+    },
+  ]
+  sync_period = "30s"
 }
 
 loki.source.file "log_scrape" {
@@ -12,7 +20,7 @@ loki.source.file "log_scrape" {
 loki.process "filter_logs" {
   stage.drop {
       source = ""
-      expression  = ".*Connection closed by authenticating user root"
+      expression = "(?i)Connection closed by authenticating user root"
       drop_counter_reason = "noisy"
     }
   forward_to = [loki.write.grafana_loki.receiver]
