@@ -1,0 +1,25 @@
+services:
+  diun:
+    image: crazymax/diun:{{ diun.version }}
+    container_name: diun
+    hostname: "{{ host_name }}"
+    restart: unless-stopped
+    command: serve
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - data:/data
+    environment:
+      TZ: {{ timezone }}
+      DIUN_PROVIDERS_DOCKER: true
+      DIUN_PROVIDERS_DOCKER_WATCHBYDEFAULT: true
+      DIUN_WATCH_WORKERS: 10
+      DIUN_WATCH_SCHEDULE: '0 */6 * * *'
+      DIUN_WATCH_JITTER: 1m
+      DIUN_NOTIF_TELEGRAM_TOKEN: "{{ telegram.bot_token }}"
+      DIUN_NOTIF_TELEGRAM_CHATIDS: "{{ telegram.chat_id }}"
+networks:
+  default:
+    name: diun_net
+volumes:
+  data:
+    name: diun_data

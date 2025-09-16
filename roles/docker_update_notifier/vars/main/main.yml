@@ -1,0 +1,8 @@
+host_name: "{{ vault_hostname }}"
+
+diun:
+  version: '4.30'
+
+telegram:
+  bot_token: "{{ vault_bot_token}}"
+  chat_id: "{{ vault_chat_id}}"

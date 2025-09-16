@@ -1,0 +1,19 @@
+- name: setup diun directory
+  ansible.builtin.file:
+    path: "{{ directories.services }}/diun"
+    state: directory
+    owner: "{{ main_user.name }}"
+    group: "{{ main_user.name }}"
+    mode: 0755
+
+- name: deploy diun from template file
+  ansible.builtin.template:
+    src: templates/docker-compose.yml.j2
+    dest: "{{ directories.services }}/diun/docker-compose.yml"
+    owner: "{{ main_user.name }}"
+    group: "{{ main_user.name }}"
+    mode: 0644
+
+- name: run diun using docker compose
+  community.docker.docker_compose_v2:
+    project_src: "{{ directories.services }}/diun"

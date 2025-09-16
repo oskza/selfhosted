@@ -20,6 +20,7 @@
     - local_dns
     - reverse_proxy
     - portainer_manager
+    - docker_update_notifier
     - system_monitor
     - homepage_dashboard
     - cloudflare_connector
