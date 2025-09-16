@@ -1,0 +1,5 @@
+FROM prom/prometheus:{{ prometheus.version }}
+
+COPY prometheus.yml /etc/prometheus/prometheus.yml
+
+CMD ["--web.enable-remote-write-receiver", "--config.file=/etc/prometheus/prometheus.yml"]

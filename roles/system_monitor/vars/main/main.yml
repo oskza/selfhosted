@@ -1,3 +1,5 @@
+host_name: "{{ vault_hostname }}"
+
 grafana:
   version: 12.0.0
   host: "{{ vault_grafana_host }}"
@@ -9,6 +11,7 @@ prometheus:
   version: v3.5.0
   host: "{{ vault_prometheus_host }}"
   port: "{{ vault_prometheus_port }}"
+  scrape_interval: 15s
 
 loki:
   version: 3.5

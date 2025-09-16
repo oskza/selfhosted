@@ -1,10 +1,17 @@
 - name: setup grafana stack directory
   ansible.builtin.file:
-    path: "{{ directories.services }}/grafana"
+    path: "{{ directories.services }}/grafana/{{ dirname }}"
     state: directory
     owner: "{{ main_user.name }}"
     group: "{{ main_user.name }}"
     mode: 0755
+  loop:
+    - alloy
+    - grafana
+    - loki
+    - prometheus
+  loop_control:
+    loop_var: dirname
 
 - name: deploy grafana stack from template files
   ansible.builtin.template:
@@ -14,10 +21,14 @@
     group: "{{ main_user.name }}"
     mode: 0644
   loop:
-    - config.alloy
-    - Dockerfile.alloy
-    - datasources.yaml
-    - Dockerfile.grafana
+    - alloy/config.alloy
+    - alloy/Dockerfile
+    - grafana/datasources.yaml
+    - grafana/Dockerfile
+    - loki/loki-config.yaml
+    - loki/Dockerfile
+    - prometheus/prometheus.yml
+    - prometheus/Dockerfile
     - docker-compose.yml
   loop_control:
     loop_var: filename
